@@ -1,0 +1,377 @@
+﻿@using MEG.Models;
+@model MEG.Controllers.HomeController.MailingData
+@{
+    ViewBag.Title = "MailingList";
+}
+<style>
+    body {
+        overflow-y: hidden;
+    }
+    #mailingListTableContainer {
+        float: left;
+        clear: both;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    #mailingListTableBodyContainer {
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height:200px;
+    }
+    #mailingListTableBodyContainer td {
+        width: 29%;
+        padding-left: 1%;
+    }
+
+        #mailingListTableBodyContainer td:last-of-type {
+            width: 9%;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+    #mailingListTableHead td {
+        text-align: left;
+        width: 29%;
+        padding-left: 1%;
+    }
+
+        #mailingListTableHead td:last-of-type {
+            width: 9%;
+        }
+
+    #mailingListTableBody {
+        float: left;
+        margin-top: 0px;
+        cursor:default;
+    }
+
+        #mailingListTableBody tr:hover {
+            background-color: #a6dbed;
+        }
+    #vO-container {
+        float: right;
+        clear: both;
+        width: 100%;
+    }
+        #vO-container div {
+            float: right;
+        }
+    #vO-range {
+        padding-top: 3px;
+        margin-right: 5px;
+    }
+    .Email:hover {
+        text-decoration: underline;
+        cursor:pointer;
+    }
+    .editing {
+        background-color: #ccc;
+        border: solid 1px #000;
+    }
+    .hiddenText {
+        overflow: hidden;
+        text-overflow:ellipsis;
+        border:solid 1px transparent;
+    }
+    #savingMessage {
+        border: solid 1px #000;
+        width: 100px;
+        height: 20px;
+        position: absolute;
+        top: 20px;
+        right: 100px;
+        z-index: 1;
+        background-color: #000;
+        text-align: center;
+        color: #fff;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        //Enable editing of table elements
+        $('#mailingListTableBody').on('dblclick', '.mailingListField', function () {
+            $(this).attr('contenteditable', 'true');
+            $(this).addClass('editing');
+            $(this).removeClass('hiddenText');
+            $(this).focus();
+        });
+        $('#mailingListTableBody').on('focusout', '.mailingListField', function () {
+            var element = this;
+            $(element).attr('contenteditable', 'false');
+            $(element).removeClass('editing');
+            $(element).addClass('hiddenText');
+            SaveMailingListDetails($(element).attr('dataType'), $(element).closest('tr').attr('id'), $(element).text());
+            $(element).attr('title', $(element).text());
+        });
+    });
+    function posTop() {
+        return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
+    }
+    function Saving(state) {
+        if ($('#savingMessage').length == 0) {
+            var string = '';
+            switch (state) {
+                case 0: string = 'saved';
+                    break;
+                case 1: string = 'saving error';
+                    break;
+                case 2: string = 'server error';
+                    break;
+            }
+            if (string != '') {
+                $('<div id="savingMessage" hidden="hidden" style="top:' + (posTop() + 20) + 'px;">' + string + '</div>').appendTo('body');
+
+                $('#savingMessage').fadeIn(300, function () {
+                    setTimeout(function () { $('#savingMessage').fadeOut('slow', function () { $('#savingMessage').remove(); }); }, 1000);
+                });
+            } else {
+                //Dont know how to handle this kind of input
+            }
+        } else {
+            //already have displayed a message
+        }
+    }
+    function SaveMailingListDetails(dataType, applicantID, data) {
+        var data = {
+            ID: applicantID,
+            Data: data,
+            DataType: dataType
+        };
+        var dataToPost = JSON.stringify(data);
+        $.ajax({
+            url: "/Home/EditAMailingList",
+            type: "post",
+            contentType: "application/json; charset=utf-8",
+            data: dataToPost,
+            dataType: 'JSON',
+            success: function (a) {
+                if (a) {
+                    Saving(0);
+                } else {
+                    Saving(1);
+                }
+            },
+            error: function () {
+                Saving(2);
+            }
+        });
+    }
+    $(document).on('click', '.deleteFromMailingList', function (e) {
+        $(this).css('cursor', 'default').css('text-decoration', 'none').css('color', '#ccc');
+        var $tr = $(this).closest('tr');
+        var data = {
+            mailingID : $tr.attr('id'),
+        };
+
+        var dataToPost = JSON.stringify(data);
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/DeleteFromMailingList",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: dataToPost,
+            success: function (a) {
+                if (a) {
+                    $tr.fadeOut('400', function (e) {
+                        $tr.remove();
+                    });
+                } else {
+                    alert("Server error");
+                    $tr.css('cursor', 'pointer').css('color', '#000');
+                }
+            },
+            error: function (ex) {
+                alert("Communication error");
+            },
+        });
+    })
+    $(document).on('click', '#vO-next', function (e) {
+        GetMailingList('next');
+    });
+    $(document).on('click', '#vO-previous', function (e) {
+        GetMailingList('previous');
+    });
+    function GetMailingList(direction) {
+        var indexID;
+        if (direction == 'next') {
+            //next
+            indexID = $('#vO-range-end').attr('mailid');
+        } else {
+            //previous
+            indexID = $('#vO-range-start').attr('mailid');
+        };
+
+        var data = {
+           Direction: direction == 'next' ? 1 : 0,//1 = next, 0 = previous
+            IndexID: indexID,
+        }
+        var dataToPost = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Home/GetMoreMailing",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: dataToPost,
+            success: function (a) {
+                if (a != 'Error') {
+                    PopulateMailingListBody(a.MailingList);
+                    $('#vO-range-start').attr('mailid', $(a.MailingList)[0].ID).text($(a.MailingList)[0].Name);
+                    $('#vO-range-end').attr('mailid', $(a.MailingList)[a.MailingList.length - 1].ID).text($(a.MailingList)[a.MailingList.length - 1].Name);
+                    if (a.ContainsFirst) {
+                        $('#vO-previous').attr('disabled', 'disabled');
+                    } else {
+                        $('#vO-previous').removeAttr('disabled');
+                    }
+                    if (a.ContainsLast) {
+                        $('#vO-next').attr('disabled', 'disabled');
+                    } else {
+                        $('#vO-next').removeAttr('disabled');
+                    }
+                } else {
+                    console.log(a);
+                }
+            },
+            error: function (ex) {
+                alert("Communication error");
+            },
+        });
+    }
+    function PopulateMailingListBody(data) {
+        //Data comes in the form of a "MEG.Controllers.HomeController.MailingData"
+        var dataString = '';
+        $(data).each(function (i, row) {
+            dataString += '<tr id="' + row.ID + '" style="display:none;">';
+            dataString+='<td>';
+            dataString += '<div class="Name mailingListField hiddenText"  title="' + row.Name + '">' + row.Name + '</div>';
+            dataString+='</td>';
+            dataString+='<td>';
+            dataString += '<div class="Email mailingListField hiddenText" title="' + row.Email + '">' + row.Email + '</div>';
+            dataString+='</td>';
+            dataString+='<td>';
+            dataString += '<div class="Added mailingListField hiddenText" title="' + WordifyJSDate(row.Added) + '">' + WordifyJSDate(row.Added) + '</div>';
+            dataString+='</td>';
+            dataString+='<td>';
+            dataString += '<span class="deleteFromMailingList">Delete</span>';
+            dataString+='</td>';
+            dataString += '</tr>';
+        });
+        $('#mailingListTableBody tbody').children().fadeOut();
+        $('#mailingListTableBody tbody').html(dataString);
+        $('#mailingListTableBody tbody').children().fadeIn();
+    }
+    function WordifyDayIndex(dayIndex) {
+        var wordDay;
+        switch (dayIndex) {
+            case 0: wordDay = 'Sunday';
+                break;
+            case 1: wordDay = 'Monday';
+                break;
+            case 2: wordDay = 'Tuesday';
+                break;
+            case 3: wordDay = 'Wednesday';
+                break;
+            case 4: wordDay = 'Thursday';
+                break;
+            case 5: wordDay = 'Friday';
+                break;
+            case 6: wordDay = 'Saturday';
+                break;
+        }
+        return wordDay;
+    }
+    function WordifyMonthIndex(monthIndex) {
+        var wordMonth;
+        switch (monthIndex) {
+            case 0: wordMonth = 'January';
+                break;
+            case 1: wordMonth = 'February';
+                break;
+            case 2: wordMonth = 'March';
+                break;
+            case 3: wordMonth = 'April';
+                break;
+            case 4: wordMonth = 'May';
+                break;
+            case 5: wordMonth = 'June';
+                break;
+            case 6: wordMonth = 'July';
+                break;
+            case 7: wordMonth = 'August';
+                break;
+            case 8: wordMonth = 'September';
+                break;
+            case 9: wordMonth = 'October';
+                break;
+            case 10: wordMonth = 'November';
+                break;
+            case 11: wordMonth = 'December';
+                break;
+        }
+        return wordMonth;
+    }
+    function WordifyJSDate(date) {
+        //Expects a date of the form "/Date(1371898280952)/"
+        var JsDate = new Date(parseInt(date.substr(6, 13)));//parse
+        return WordifyDayIndex(JsDate.getDay()) + ', ' + JsDate.getDate() + ' ' + WordifyMonthIndex(JsDate.getMonth()) + ' ' + JsDate.getFullYear()
+    }
+</script>
+<div class="content-wrapper">
+    <div id="vO-container">
+       <div style="float: left;padding-top: 3px;color: #f00;">[Double click any field to edit]</div>
+        <div id="vO-buttons">
+            <input type="button" id="vO-next" @if (Model.ContainsLast)
+                                              {
+                                                  @Html.Raw("disabled=\"disabled\"")
+                                              }
+                                              else { /*There are records before this one */}
+                value=">"/>
+            <input type="button" id="vO-previous" @if (Model.ContainsFirst)
+                                                  {
+                                                  @Html.Raw("disabled=\"disabled\"")
+                                                  }
+                                                  else { /*There are records before this one */}
+                value="<"/>
+            
+    </div>
+         <div id="vO-range"><span id="vO-range-start" mailID="@Model.MailingList.First().ID">@Model.MailingList.First().Name</span><span> - </span><span id="vO-range-end" mailID="@Model.MailingList.Last().ID">@Model.MailingList.Last().Name</span></div>
+        </div>
+    <div id="mailingListTableContainer" class="listTableContainer">
+        <div>
+            <table id="mailingListTableHead" class="listTableHead" style="width: 100%; border-bottom: solid 1px #8ebed7;">
+                <thead style="background-color: #8ebed7; text-align: center;">
+                    <tr>
+                        <td>Name</td>
+                        <td>Email</td>
+                        <td>Added</td>
+                        <td></td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="mailingListTableBodyContainer" class="listTableBodyContainer" style="width: 100%">
+            <table id="mailingListTableBody" class="listTableBody" style="width: 100%; border-bottom: solid 1px #8ebed7;">
+                <tbody>
+                    @foreach (MailingList ml in Model.MailingList)
+                    {
+                        <tr id="@ml.ID">
+                            <td>
+                                <div dataType="Name" class="mailingListField hiddenText" title="@ml.Name">@ml.Name</div>
+                            </td>
+                            <td>
+                                <div dataType="Email" class="mailingListField hiddenText" title="@ml.Email">@ml.Email</div>
+                            </td>
+                            <td>
+                                <div dataType="Added" class="mailingListField hiddenText" title="@ml.Added.Value.ToLongDateString()">@ml.Added.Value.ToLongDateString()</div>
+                            </td>
+                            <td>
+                                <span class="deleteFromMailingList">Delete</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

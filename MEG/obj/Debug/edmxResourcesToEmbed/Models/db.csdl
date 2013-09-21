@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MegDatabaseModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="MegDatabaseEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+    <EntitySet Name="Applicants" EntityType="MegDatabaseModel.Applicant" />
+    <EntitySet Name="Events" EntityType="MegDatabaseModel.Event" />
+    <EntitySet Name="MailingLists" EntityType="MegDatabaseModel.MailingList" />
+    <EntitySet Name="MUsers" EntityType="MegDatabaseModel.MUser" />
+    <EntitySet Name="Reservations" EntityType="MegDatabaseModel.Reservation" />
+    <AssociationSet Name="FK__Event__CreatedBy__108B795B" Association="MegDatabaseModel.FK__Event__CreatedBy__108B795B">
+      <End Role="MUser" EntitySet="MUsers" />
+      <End Role="Event" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Reservati__Event__276EDEB3" Association="MegDatabaseModel.FK__Reservati__Event__276EDEB3">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="Reservation" EntitySet="Reservations" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Applicant">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Type="Guid" Name="ID" Nullable="false" />
+    <Property Type="String" Name="FirstName" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="LastName" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="DOB" Precision="7" />
+    <Property Type="String" Name="PersonalAddress" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="BusinessAddress" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="PreferredAddress" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="PersonalPhone" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="BusinessPhone" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="PreferredPhone" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="PersonalEmail" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="BusinessEmail" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="PreferredEmail" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="AcademicQualifications" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="WorkExperience" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Employeer" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="LearnedSocieties" MaxLength="300" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Type="Guid" Name="ID" Nullable="false" />
+    <Property Type="Guid" Name="CreatedBy" />
+    <Property Type="DateTime" Name="Created" Precision="7" />
+    <Property Type="String" Name="Title" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Body" MaxLength="2000" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Presenter" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="EventDate" Precision="7" />
+    <Property Type="Double" Name="StartTime" />
+    <Property Type="Double" Name="EndTime" />
+    <Property Type="String" Name="Venue1" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Venue2" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Venue3" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Venue4" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="TotalSeats" />
+    <Property Type="Int32" Name="SeatsTaken" />
+    <Property Type="DateTime" Name="DateTimeStamp" Precision="7" />
+    <Property Type="Boolean" Name="HasImage" />
+    <Property Type="String" Name="ImageExtension" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="ReminderSendDate" Precision="7" />
+    <Property Type="Boolean" Name="ReminderSent" />
+    <Property Type="Boolean" Name="Active" />
+    <NavigationProperty Name="MUser" Relationship="MegDatabaseModel.FK__Event__CreatedBy__108B795B" FromRole="Event" ToRole="MUser" />
+    <NavigationProperty Name="Reservations" Relationship="MegDatabaseModel.FK__Reservati__Event__276EDEB3" FromRole="Event" ToRole="Reservation" />
+  </EntityType>
+  <EntityType Name="MailingList">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Type="Guid" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Name" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="Added" Precision="7" />
+  </EntityType>
+  <EntityType Name="MUser">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Type="Guid" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Email" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Guid" Name="EmailCode" />
+    <Property Type="Boolean" Name="EmailVerified" />
+    <Property Type="String" Name="FirstName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="LastName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Password" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="LastActivityDate" Precision="0" />
+    <Property Type="String" Name="PasswordQuestion" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="PasswordAnswer" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Mobile" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Type="Boolean" Name="IsLockedOut" />
+    <Property Type="DateTime" Name="Created" Precision="7" />
+    <Property Type="DateTime" Name="LastLoginDate" Precision="7" />
+    <Property Type="DateTime" Name="LastPasswordChangeDate" Precision="7" />
+    <Property Type="DateTime" Name="LastLockoutDate" Precision="7" />
+    <Property Type="Int32" Name="FailedPasswordAttemptCount" />
+    <Property Type="Int32" Name="FailedPasswordAnswerAttemptCount" />
+    <Property Type="Boolean" Name="IsBusinessRelated" />
+    <NavigationProperty Name="Events" Relationship="MegDatabaseModel.FK__Event__CreatedBy__108B795B" FromRole="MUser" ToRole="Event" />
+  </EntityType>
+  <EntityType Name="Reservation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Type="Guid" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Name" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="NoSeats" />
+    <Property Type="Boolean" Name="MemberMeg" />
+    <Property Type="Boolean" Name="MemberIpenz" />
+    <Property Type="Boolean" Name="MemberImeche" />
+    <Property Type="DateTime" Name="Timestamp" Precision="7" />
+    <Property Type="Guid" Name="EventID" />
+    <NavigationProperty Name="Event" Relationship="MegDatabaseModel.FK__Reservati__Event__276EDEB3" FromRole="Reservation" ToRole="Event" />
+  </EntityType>
+  <Association Name="FK__Event__CreatedBy__108B795B">
+    <End Type="MegDatabaseModel.MUser" Role="MUser" Multiplicity="0..1" />
+    <End Type="MegDatabaseModel.Event" Role="Event" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MUser">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Event">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Reservati__Event__276EDEB3">
+    <End Type="MegDatabaseModel.Event" Role="Event" Multiplicity="0..1" />
+    <End Type="MegDatabaseModel.Reservation" Role="Reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Reservation">
+        <PropertyRef Name="EventID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

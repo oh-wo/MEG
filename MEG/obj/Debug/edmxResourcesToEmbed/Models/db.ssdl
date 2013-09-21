@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MegDatabaseModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="MegDatabaseModelStoreContainer">
+    <EntitySet Name="Applicants" EntityType="MegDatabaseModel.Store.Applicants" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Event" EntityType="MegDatabaseModel.Store.Event" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MailingList" EntityType="MegDatabaseModel.Store.MailingList" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MUser" EntityType="MegDatabaseModel.Store.MUser" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Reservations" EntityType="MegDatabaseModel.Store.Reservations" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK__Event__CreatedBy__108B795B" Association="MegDatabaseModel.Store.FK__Event__CreatedBy__108B795B">
+      <End Role="MUser" EntitySet="MUser" />
+      <End Role="Event" EntitySet="Event" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Reservati__Event__276EDEB3" Association="MegDatabaseModel.Store.FK__Reservati__Event__276EDEB3">
+      <End Role="Event" EntitySet="Event" />
+      <End Role="Reservations" EntitySet="Reservations" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Applicants">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="100" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="100" />
+    <Property Name="DOB" Type="datetime2" />
+    <Property Name="PersonalAddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="BusinessAddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="PreferredAddress" Type="nvarchar" MaxLength="15" />
+    <Property Name="PersonalPhone" Type="nvarchar" MaxLength="50" />
+    <Property Name="BusinessPhone" Type="nvarchar" MaxLength="50" />
+    <Property Name="PreferredPhone" Type="nvarchar" MaxLength="50" />
+    <Property Name="PersonalEmail" Type="nvarchar" MaxLength="50" />
+    <Property Name="BusinessEmail" Type="nvarchar" MaxLength="50" />
+    <Property Name="PreferredEmail" Type="nvarchar" MaxLength="50" />
+    <Property Name="AcademicQualifications" Type="nvarchar" MaxLength="300" />
+    <Property Name="WorkExperience" Type="nvarchar" MaxLength="300" />
+    <Property Name="Employeer" Type="nvarchar" MaxLength="300" />
+    <Property Name="LearnedSocieties" Type="nvarchar" MaxLength="300" />
+  </EntityType>
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CreatedBy" Type="uniqueidentifier" />
+    <Property Name="Created" Type="datetime2" />
+    <Property Name="Title" Type="nvarchar" MaxLength="100" />
+    <Property Name="Body" Type="nvarchar" MaxLength="2000" />
+    <Property Name="Presenter" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventDate" Type="datetime2" />
+    <Property Name="StartTime" Type="float" />
+    <Property Name="EndTime" Type="float" />
+    <Property Name="Venue1" Type="nvarchar" MaxLength="100" />
+    <Property Name="Venue2" Type="nvarchar" MaxLength="100" />
+    <Property Name="Venue3" Type="nvarchar" MaxLength="100" />
+    <Property Name="Venue4" Type="nvarchar" MaxLength="100" />
+    <Property Name="TotalSeats" Type="int" />
+    <Property Name="SeatsTaken" Type="int" />
+    <Property Name="DateTimeStamp" Type="datetime2" />
+    <Property Name="HasImage" Type="bit" />
+    <Property Name="ImageExtension" Type="nvarchar" MaxLength="100" />
+    <Property Name="ReminderSendDate" Type="datetime2" />
+    <Property Name="ReminderSent" Type="bit" />
+    <Property Name="Active" Type="bit" />
+  </EntityType>
+  <EntityType Name="MailingList">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="Added" Type="datetime2" />
+  </EntityType>
+  <EntityType Name="MUser">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="50" />
+    <Property Name="EmailCode" Type="uniqueidentifier" />
+    <Property Name="EmailVerified" Type="bit" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Password" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastActivityDate" Type="date" />
+    <Property Name="PasswordQuestion" Type="nvarchar" MaxLength="50" />
+    <Property Name="PasswordAnswer" Type="nvarchar" MaxLength="50" />
+    <Property Name="Mobile" Type="nchar" MaxLength="50" />
+    <Property Name="IsLockedOut" Type="bit" />
+    <Property Name="Created" Type="datetime2" />
+    <Property Name="LastLoginDate" Type="datetime2" />
+    <Property Name="LastPasswordChangeDate" Type="datetime2" />
+    <Property Name="LastLockoutDate" Type="datetime2" />
+    <Property Name="FailedPasswordAttemptCount" Type="int" />
+    <Property Name="FailedPasswordAnswerAttemptCount" Type="int" />
+    <Property Name="IsBusinessRelated" Type="bit" />
+  </EntityType>
+  <EntityType Name="Reservations">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" />
+    <Property Name="NoSeats" Type="int" />
+    <Property Name="MemberMeg" Type="bit" />
+    <Property Name="MemberIpenz" Type="bit" />
+    <Property Name="MemberImeche" Type="bit" />
+    <Property Name="Timestamp" Type="datetime2" />
+    <Property Name="EventID" Type="uniqueidentifier" />
+  </EntityType>
+  <Association Name="FK__Event__CreatedBy__108B795B">
+    <End Role="MUser" Type="MegDatabaseModel.Store.MUser" Multiplicity="0..1" />
+    <End Role="Event" Type="MegDatabaseModel.Store.Event" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MUser">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Event">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Reservati__Event__276EDEB3">
+    <End Role="Event" Type="MegDatabaseModel.Store.Event" Multiplicity="0..1" />
+    <End Role="Reservations" Type="MegDatabaseModel.Store.Reservations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Reservations">
+        <PropertyRef Name="EventID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

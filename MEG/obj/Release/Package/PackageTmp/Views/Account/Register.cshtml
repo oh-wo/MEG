@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+<script>
+
+    $(document).on('click', '#submitRegister', function () {
+        SubmitRegistration();
+    });
+    $(document).on('submit', '#registerForm', function (e) {
+        if (e.isTrigger == false) {
+            SubmitRegistration();
+        }
+    });
+    function SubmitRegistration() {
+        var validationErrors = false;
+        var errorString = "";
+        if ($('input[name="email"]').val() == "") { validationErrors = true; errorString += "Please enter your email address.</br>"; };
+        if ($('input[name="registerToken"]').val() == "") { validationErrors = true; errorString += "You must enter a register token.</br>"; };
+        if ($('input[name="passwordTest"]').val().length < 6) { validationErrors = true; errorString += "Please enter a password with 6 or more characters.</br>"; };
+        if ($('input[name="passwordTest"]').val() != $('input[name="password"]').val()) { validationErrors = true; errorString += "Passwords don't match.</br>"; };
+
+        if (!validationErrors) {
+            $('#valErrorString').html("");
+            $('#registerForm').submit();
+        } else {
+            $('#valErrorString').html(errorString);
+        }
+    }
+
+</script>
+<form action="/Account/Register" id="registerForm" method="post" style="width:400px; margin:0px auto; margin-top:40px; float:left;">
+    <div style="font-weight:bold; font-size:20px;">Board Member Registration</div>
+    <div style="font-weight:bold; font-size:13px;">password must be 6 characters or more</div>
+    <table>
+        <tbody><tr>
+            <td>Email: </td><td><input style="color:#069; font-weight:bold; padding-left:3px;" type="text" name="email"></td>
+        </tr>
+        <tr>
+            <td>Register Token: </td><td><input style="color:#069; font-weight:bold; padding-left:3px;" type="text" name="registerToken"></td>
+        </tr>
+        <tr>
+            <td>Password: </td><td><input style="color:#069; font-weight:bold; padding-left:3px;" type="password" name="passwordTest"></td>
+        </tr>
+        <tr>
+            <td>Re-enter Password: </td><td><input style="color:#069; font-weight:bold; padding-left:3px;" type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><div id="valErrorString" style="color:#f00; font-weight:bold;"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="button" value="Register" id="submitRegister"></td>
+        </tr>
+    </tbody></table>
+    
+</form>

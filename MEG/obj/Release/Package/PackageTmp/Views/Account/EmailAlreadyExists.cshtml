@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Email already exists";
+}
+<style>
+a {
+        text-decoration: underline;
+    }
+    a:hover {
+        font-weight: bold;
+    }
+</style>
+<div style="float: left; margin-top: 100px; margin-bottom: 200px;">
+   Oh no! <br />
+    That email is already registered. Please either @Html.ActionLink("click here","Register") to try again using a different email, or @Html.ActionLink("click here","LogOn") to logon with that email address. 
+</div>

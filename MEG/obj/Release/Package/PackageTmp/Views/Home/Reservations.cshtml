@@ -1,0 +1,99 @@
+﻿@using MEG.Models;
+@model List<Event>
+<script>
+    $(document).on('click', '.cancelReservation', function (e) {
+        $(this).css('cursor', 'default').css('text-decoration', 'none').css('color', '#ccc');
+        var eventID = $(this).closest('table').attr('articleid');
+        var data = {
+            EventID: eventID,
+            ReservationID : $(this).attr('reservationid'),
+        };
+        var $tr = $(this).closest('tr');
+        var dataToPost = JSON.stringify(data);
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/DeleteReservation",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: dataToPost,
+            success: function (a) {
+                if (a) {
+                    $('span[articleid="' + eventID + '"].seatsRemaining').text(parseInt($('span[articleid="' + eventID + '"].seatsRemaining').text()) + parseInt($($tr.children('td')[2]).text()));
+                    $tr.fadeOut('400', function (e) {
+                        $tr.remove();
+                    });
+                } else {
+                    alert("Server error");
+                    $(this).css('cursor', 'pointer').css('color', '#000');
+                }
+            },
+            error: function (ex) {
+                alert("Communication error");
+            },
+        });
+    });
+</script>
+
+<div class="content-wrapper" style="clear: both;">
+    @{
+        foreach (Event e in Model)
+        {
+            <div style="font-weight: bold; font-size: 25px; margin-top:20px;">@e.Title</div>
+        <div>
+            <div style="float: left;"><span class="seatsRemaining" articleid="@e.ID">@(e.TotalSeats-e.SeatsTaken)</span>/@e.TotalSeats seats remaining</div>
+            <input style="float: right;" type="button" class="emailAll" articleid="@e.ID" articletitle="An upcoming event" value="Email all">
+            <form method="post" action="/Home/Article">
+                <input name="articleID" value="@e.ID" type="hidden"><input style="float: right;" type="submit" class="editArticle" value="Edit Article"></form>
+        </div>
+        
+        <table style="width:100%; border-bottom:solid 1px #8ebed7;" articleid="@e.ID">
+            <thead style="background-color: #8ebed7; text-align: center;">
+                <tr>
+                    <td rowspan="2">Name</td>
+                    <td rowspan="2">Email</td>
+                    <td rowspan="2">No. Seats</td>
+                    <td colspan="3">Membership</td>
+                    <td rowspan="2">TimeStamp</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>MEG</td>
+                    <td>IPENZ</td>
+                    <td>IMECHE</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+
+                @foreach (Reservation r in e.Reservations.OrderBy(r=>r.Name))
+                {
+            
+        
+                    <tr>
+                        <td>@r.Name</td>
+                        <td articleid="@e.ID" emailcell=""><a href="mailto:@r.Email">@r.Email</a></td>
+                        <td>@r.NoSeats</td>
+                        <td>@if (r.MemberMeg??false)
+                            {
+                                <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
+                            }
+                        </td>
+                        <td>@if (r.MemberIpenz??false)
+                            {
+                                <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
+                            }</td>
+                        <td>@if (r.MemberImeche??false)
+                            {
+                                <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
+                            }</td>
+                        <td>4/4/2013 3:49:11 AM</td>
+                        <td class="cancelReservation" style="cursor: pointer; text-decoration: underline;" reservationid="@r.ID">cancel</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    
+        }    
+    }
+</div>

@@ -1,0 +1,50 @@
+﻿@using MEG.Models;
+@model Event
+
+<div class="rsvpContainer" style="display:none;">
+    <div class="rsvpCloseWindow" style="float: right;">
+        <img src="/Content/black-cross-md.png" class="rsvpCloseImage" >
+
+    </div>
+    <div class="rsvpTitle">@Model.Title</div>
+<div class="rsvpTimeRange rsvpDetails">@Model.StartTime - @Model.EndTime</div>
+    <div class="rsvpDate rsvpDetails">@Model.EventDate.GetValueOrDefault().ToLongDateString()</div>
+    <div class="rsvpVenue rsvpDetails">@{String.Format("{0}{1}{2}{3}", String.Concat(Model.Venue1, ", "), String.Concat(Model.Venue2, ", "), String.Concat(Model.Venue3, ", "), Model.Venue4);}</div>
+    <div class="rsvpName rsvpInput">
+        <div style="float: left; width: 140px; margin-right: 10px;">Name: </div>
+        <input style="float: left; color: #F33;" type="text" class="rsvpUserName"><div class="userNameValidationError" style="margin-top: 5px; display: none; color: #f00; font-weight: normal; float: left; font-size: 13px;">Please enter your name</div>
+    </div>
+    <div class="rsvpEmail rsvpInput">
+        <div style="float: left; width: 140px; margin-right: 10px;">Email: </div>
+        <input style="float: left; color: #F33;" type="text" class="rsvpUserEmail"><div class="userEmailValidationError" style="margin-top: 5px; display: none; color: #f00; font-weight: normal; float: left; font-size: 13px;">Please enter your email</div>
+    </div>
+    <div class="rsvpSeats rsvpInput">
+        <div style="float: left; width: 140px; margin-right: 10px;">Seats required: </div>
+        <select class="rsvpNoSeats" style="color: #F33;">
+            <option value="1">one</option>
+            <option value="2">two</option>
+            <option value="3">three</option>
+            <option value="4">four</option>
+            <option value="5">five</option>
+        </select></div>
+    <div class="rsvpMembership rsvpInput">
+        <div style="float: left; width: 140px; margin-right: 10px;">Your membership:</div>
+        <table class="userMembership" style="width: 300px; color: #F33;">
+            <tbody>
+                <tr>
+                    <td>MEG</td>
+                    <td>IPENZ</td>
+                    <td>IMechE</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="MegMember" type="checkbox"></td>
+                    <td>
+                        <input class="IpenzMember" type="checkbox"></td>
+                    <td>
+                        <input class="ImecheMember" type="checkbox"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <input class="completeRsvp" type="button" value="RSVP"></div>

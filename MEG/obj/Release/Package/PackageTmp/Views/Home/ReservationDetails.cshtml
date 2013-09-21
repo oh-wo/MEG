@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+@using MEG.Models
+@model Reservation
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ReservationDetails</title>
+</head>
+<body>
+    <div>
+        Mechanical Engineering Group<br />
+        Reservation<br />
+        Title:@Model.Event.Title<br />
+        Seats:@Model.NoSeats<br />
+        Date:@Model.Event.EventDate.Value.ToLongDateString()<br />
+        StartTime:@Model.Event.StartTime<br />
+        EndTime:@Model.Event.EndTime<br />
+        <br />
+        <br />
+        To change or cancel your reservation, please click here.
+
+    </div>
+</body>
+</html>

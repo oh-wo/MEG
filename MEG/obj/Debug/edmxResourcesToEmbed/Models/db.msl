@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MegDatabaseModelStoreContainer" CdmEntityContainer="MegDatabaseEntities">
+    <EntitySetMapping Name="Applicants">
+      <EntityTypeMapping TypeName="MegDatabaseModel.Applicant">
+        <MappingFragment StoreEntitySet="Applicants">
+          <ScalarProperty Name="LearnedSocieties" ColumnName="LearnedSocieties" />
+          <ScalarProperty Name="Employeer" ColumnName="Employeer" />
+          <ScalarProperty Name="WorkExperience" ColumnName="WorkExperience" />
+          <ScalarProperty Name="AcademicQualifications" ColumnName="AcademicQualifications" />
+          <ScalarProperty Name="PreferredEmail" ColumnName="PreferredEmail" />
+          <ScalarProperty Name="BusinessEmail" ColumnName="BusinessEmail" />
+          <ScalarProperty Name="PersonalEmail" ColumnName="PersonalEmail" />
+          <ScalarProperty Name="PreferredPhone" ColumnName="PreferredPhone" />
+          <ScalarProperty Name="BusinessPhone" ColumnName="BusinessPhone" />
+          <ScalarProperty Name="PersonalPhone" ColumnName="PersonalPhone" />
+          <ScalarProperty Name="PreferredAddress" ColumnName="PreferredAddress" />
+          <ScalarProperty Name="BusinessAddress" ColumnName="BusinessAddress" />
+          <ScalarProperty Name="PersonalAddress" ColumnName="PersonalAddress" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Events">
+      <EntityTypeMapping TypeName="MegDatabaseModel.Event">
+        <MappingFragment StoreEntitySet="Event">
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="ReminderSent" ColumnName="ReminderSent" />
+          <ScalarProperty Name="ReminderSendDate" ColumnName="ReminderSendDate" />
+          <ScalarProperty Name="ImageExtension" ColumnName="ImageExtension" />
+          <ScalarProperty Name="HasImage" ColumnName="HasImage" />
+          <ScalarProperty Name="DateTimeStamp" ColumnName="DateTimeStamp" />
+          <ScalarProperty Name="SeatsTaken" ColumnName="SeatsTaken" />
+          <ScalarProperty Name="TotalSeats" ColumnName="TotalSeats" />
+          <ScalarProperty Name="Venue4" ColumnName="Venue4" />
+          <ScalarProperty Name="Venue3" ColumnName="Venue3" />
+          <ScalarProperty Name="Venue2" ColumnName="Venue2" />
+          <ScalarProperty Name="Venue1" ColumnName="Venue1" />
+          <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+          <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+          <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+          <ScalarProperty Name="Presenter" ColumnName="Presenter" />
+          <ScalarProperty Name="Body" ColumnName="Body" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MailingLists">
+      <EntityTypeMapping TypeName="MegDatabaseModel.MailingList">
+        <MappingFragment StoreEntitySet="MailingList">
+          <ScalarProperty Name="Added" ColumnName="Added" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MUsers">
+      <EntityTypeMapping TypeName="MegDatabaseModel.MUser">
+        <MappingFragment StoreEntitySet="MUser">
+          <ScalarProperty Name="IsBusinessRelated" ColumnName="IsBusinessRelated" />
+          <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
+          <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
+          <ScalarProperty Name="LastLockoutDate" ColumnName="LastLockoutDate" />
+          <ScalarProperty Name="LastPasswordChangeDate" ColumnName="LastPasswordChangeDate" />
+          <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
+          <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+          <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="EmailVerified" ColumnName="EmailVerified" />
+          <ScalarProperty Name="EmailCode" ColumnName="EmailCode" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reservations">
+      <EntityTypeMapping TypeName="MegDatabaseModel.Reservation">
+        <MappingFragment StoreEntitySet="Reservations">
+          <ScalarProperty Name="EventID" ColumnName="EventID" />
+          <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+          <ScalarProperty Name="MemberImeche" ColumnName="MemberImeche" />
+          <ScalarProperty Name="MemberIpenz" ColumnName="MemberIpenz" />
+          <ScalarProperty Name="MemberMeg" ColumnName="MemberMeg" />
+          <ScalarProperty Name="NoSeats" ColumnName="NoSeats" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

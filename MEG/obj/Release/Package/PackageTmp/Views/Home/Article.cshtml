@@ -1,0 +1,705 @@
+﻿@using MEG.Models;
+@model Event
+@{string Title = Model.Title == null ? "Enter a title" : Model.Title;}
+
+@{
+    ViewBag.Title = "Article";
+}
+<style>
+    #articleContainer {
+        float: left;
+        clear: both;
+        width: 100%;
+        margin-top: 50px;
+    }
+
+    #Title {
+        float: left;
+        font-weight: bold;
+        font-size: 30px;
+        width: 100%;
+    }
+
+    #title-date {
+        float: left;
+        clear: both;
+        font-weight: bold;
+        font-size: 20px;
+        margin-top: 4px;
+        margin-right: 3px;
+        color: #000;
+    }
+
+    #title-type {
+        float: left;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    #seats {
+        float: right;
+        margin-top: 8px;
+    }
+
+    #seats-remaining {
+        float: left;
+        margin-top: 4px;
+        font-size: 14px;
+    }
+
+    #TotalSeats {
+        width: 24px;
+        float: left;
+        margin-right: 5px;
+    }
+
+    #rsvp {
+        float: right;
+        margin-top: 9px;
+        margin-right: 10px;
+    }
+
+    #Body {
+        float: left;
+        text-align: justify;
+        width: 58%;
+        clear: both;
+        resize: none;
+        margin-top: 10px;
+        margin-bottom: 50px;
+        height: 300px;
+    }
+
+    #body-image {
+        
+        width: 100%;
+        height:100%;
+        
+    }
+    #body-image-container {
+        margin-top: 10px;
+        width: 40%;
+        float: right;
+        background-color:#ccc;
+        padding:0px;
+        height:300px;
+        text-align:center;
+        position:relative;
+    }
+    #body-image-uploadbox {
+        position:absolute;
+        top:0px;
+        left:0px;
+        background-color:rgba(255, 255, 255, 0.8);
+        width:100%;
+        height:100%;
+    }
+    .hidden {
+        display: none;
+    }
+    #body-image-placeholder {
+        margin-top: 40px;
+    }
+    #details {
+        float: right;
+        margin-bottom: 20px;
+        width: 67%;
+    }
+
+        #details thead {
+            background-color: #f33;
+        }
+
+            #details thead td {
+                font-weight: bold;
+                text-align: center;
+            }
+
+        #details td {
+            text-align: center;
+        }
+
+    .venue {
+        text-align: center;
+        text-overflow:ellipsis;
+    }
+
+    .thumb {
+        height: 75px;
+        border: 1px solid #000;
+        margin: 10px 5px 0 0;
+    }
+    #savingMessage {
+        border: solid 1px #000;
+        width: 100px;
+        height: 20px;
+        position: absolute;
+        right: 100px;
+        z-index: 1;
+        background-color: #000;
+        text-align: center;
+        color: #fff;
+    }
+    #mail-reminder-details {
+        clear: both;
+        float: left;
+        background-color: #ccc;
+        padding-left: 5px;
+        border-radius: 5px;
+        padding-right: 5px;
+        margin-bottom: 10px;
+    }
+    .e-active-container {
+float: left;
+margin-top:5px;
+}
+    .e-active {
+float: left;
+}   
+</style>
+<style>
+    /*razor css goes here - otherwise it stuffs up visual studio's formatting of all the other styles*/
+     input[type="text"],textarea{
+        @if (!User.Identity.IsAuthenticated)
+        { @Html.Raw("border:solid 1px #fff;");
+        }
+        else
+        {@Html.Raw("border:solid 1px #ccc;");
+        }
+    }
+</style>
+
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script>
+    //Map stuff
+    $(document).ready(function () {
+        var venue01 = $('#Venue01').val();
+        var venue02 = $('#Venue02').val();
+        var venue03 = $('#Venue03').val();
+        var venue04 = $('#Venue04').val();
+        var venue05 = 'New Zealand';
+        var loc = venue01 + ' ' + venue02 + ' ' + venue03 + ' ' + venue04 + ' ' + venue05;
+        x = GetCoords(loc);
+        if (x != undefined) {
+            initializeMap(x);
+
+            var options = {
+                position: new google.maps.LatLng(x.lat, x.lng),
+                title: venue01,
+            };
+            var marker = new google.maps.Marker(options);
+            marker.setMap(map);
+        }
+    });
+    function GetCoords(location) {
+        var x;
+        $.ajax({
+            url: "http://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&sensor=true",
+            type: "get",
+            async: false,
+            success: function (a) {
+                if (a.status == 'OK') {
+                    x = a.results[0].geometry.location;
+                } else {
+                    //problem!
+                }
+            },
+            error: function () {
+
+            }
+        });
+        return x;
+    }
+    function initializeMap(location) {
+        var myOptions = {
+            zoom: 15,
+            center: new google.maps.LatLng(x.lat, x.lng),
+            mapTypeId: google.maps.MapTypeId.TERRAIN,
+            styles: [
+        {
+            stylers: [{ saturation: -100 }]
+        }
+            ]
+        };
+
+        map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        //Article main controls
+        $(document).on('click', '#deleteArticle', function () {
+            if (confirm('Are you sure you want to delete this article?')) {
+                var data = {
+                    ArticleID: $('#articleContainer').attr('articleid'),
+                };
+
+                var dataToPost = JSON.stringify(data);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/DeleteArticle",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: dataToPost,
+                    success: function (a) {
+                        if (a.Success) {
+                            alert('Event deleted');
+                            window.location = '/Home';
+                        } else {
+                            alert(a.Message);
+                        };
+                    },
+                    error: function (ex) {
+                    },
+                });
+
+
+            } else {
+                //dont delete the article
+            }
+        });
+        //Article editing posting
+        $('#articleContainer').on('change', 'input', function (e) {
+            var field = $(this).attr('id');
+            var value = $(this).val();
+        
+                var articleID = $('#articleContainer').attr('articleID');
+                var data = {
+                    Field: field,
+                    Value: value,
+                    ArticleID: articleID,
+                };
+
+                var dataToPost = JSON.stringify(data);
+                var $input = $(this);
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/UpdateArticle",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: dataToPost,
+                    success: function (a) {
+                        if (a) {
+                            Saving(0);
+                            if ($input.attr('id') == 'EventDate') {
+                                $('#title-date').text(WordifyMonthIndex($input.datepicker('getDate').getMonth()));
+                            } else {
+                                //Doesn't apply
+                            }
+                        } else {
+                            Saving(2);
+                        }
+                    },
+                    error: function (ex) {
+                        Saving(1);
+                    },
+                });
+            
+        });
+
+        $('#articleContainer').on('change', 'textarea', function () {
+            var field = $(this).attr('id');
+            var value = $(this).val();
+            var articleID = $('#articleContainer').attr('articleID');
+            var data = {
+                Field: field,
+                Value: value,
+                ArticleID: articleID,
+            };
+            var dataToPost = JSON.stringify(data);
+            $.ajax({
+                type: "POST",
+                url: "/Home/UpdateArticle",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: dataToPost,
+                success: function (a) {
+                    if (a) {
+                        Saving(0);
+                    } else {
+                        Saving(2);
+                    }
+                },
+                error: function (ex) {
+                    Saving(1);
+                },
+            });
+        });
+        $('#articleContainer').on('change', 'select', function () {
+            var field = $(this).attr('id');
+            var value = $(this).val();
+            var articleID = $('#articleContainer').attr('articleID');
+            var data = {
+                Field: field,
+                Value: value,
+                ArticleID: articleID,
+            };
+            var dataToPost = JSON.stringify(data);
+            $.ajax({
+                type: "POST",
+                url: "/Home/UpdateArticle",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: dataToPost,
+                success: function (a) {
+                    if (a.Success) {
+                        Saving(0);
+                        if (field = 'reminderEmailOffset') {
+                            //Need to update the date displayed
+                            $('#ReminderSentDate').text(a.Value);
+                        } else {
+                            //erroneous
+                        }
+                    } else {
+                        Saving(2);
+                    }
+                },
+                error: function (ex) {
+                    Saving(1);
+                },
+            });
+        });
+        //Helper function
+        function WordifyMonthIndex(monthIndex) {
+            var wordMonth;
+            switch (monthIndex) {
+                case 0: wordMonth = 'January';
+                    break;
+                case 1: wordMonth = 'February';
+                    break;
+                case 2: wordMonth = 'March';
+                    break;
+                case 3: wordMonth = 'April';
+                    break;
+                case 4: wordMonth = 'May';
+                    break;
+                case 5: wordMonth = 'June';
+                    break;
+                case 6: wordMonth = 'July';
+                    break;
+                case 7: wordMonth = 'August';
+                    break;
+                case 8: wordMonth = 'September';
+                    break;
+                case 9: wordMonth = 'October';
+                    break;
+                case 10: wordMonth = 'November';
+                    break;
+                case 11: wordMonth = 'December';
+                    break;
+            }
+            return wordMonth;
+        }
+        //Article editing controls
+        //--configure datepicker
+        $("#EventDate").datepicker();
+        $("#EventDate").datepicker("option", "dateFormat", "DD d MM yy");
+        //--set initial date
+        $('#EventDate').datepicker('setDate', new Date($('#InitialEventDateYear').val(), parseInt($('#InitialEventDateMonth').val()) - 1, $('#InitialEventDateDay').val()))
+        //--configure time selects
+        var timeString = ' ';
+        var time = '00:00am';
+        var meridian;
+        for (i = 7; i < 21; i++) {
+            time = ConvertInitialTime(i);
+            timeString += '<option value="' + time + '">' + time + '</option>';
+            time = ConvertInitialTime(i + 0.5);
+            timeString += '<option value="' + time + '">' + time + '</option>';
+        }
+        $('#StartTime').html(timeString);
+        $('#EndTime').html(timeString);
+        //--set initial time
+        $('#StartTime').val(ConvertInitialTime($('#StartTime_totalHours').val()));
+        $('#EndTime').val(ConvertInitialTime($('#EndTime_totalHours').val()));
+  
+    });
+    function ConvertInitialTime(totalHoursString) {
+        var time = {};
+        time.totalHours = parseFloat(totalHoursString);
+        time.hours = Math.floor(time.totalHours) > 12 ? Math.floor(time.totalHours) - 12 : Math.floor(time.totalHours);
+        time.hours = time.hours < 10 ? ('0' + time.hours) : time.hours;
+        time.minutes = Math.round((time.totalHours - Math.floor(time.totalHours)) * 60) == 0 ? '00' : '30';
+        time.meridian = Math.floor(time.totalHours) >= 12 ? 'pm' : 'am';
+        return (time.hours + ':' + time.minutes + time.meridian);
+    }
+
+</script>
+@if (!User.Identity.IsAuthenticated)
+{
+    <script>
+        $(document).ready(function () {
+            var startTime = $('#StartTime').val();
+            var endTime = $('#EndTime').val();
+            $('<div>' + startTime + '</div>').insertAfter('#StartTime');
+            $('<div>' + endTime + '</div>').insertAfter('#EndTime');
+            $('#StartTime').remove();
+            $('#EndTime').remove();
+        });
+
+       
+    </script>
+}else{
+ <script>
+     $(document).on('change', '.e-active', function (e) {
+         var data = {
+             eID: $('#articleContainer').attr('articleid'),
+             state: $(this).attr('checked') == 'checked',
+         };
+         var dataToPost = JSON.stringify(data);
+         $.ajax({
+             type: "POST",
+             url: "/Home/ChangeEventActivity",
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             data: dataToPost,
+             success: function (a) {
+                 console.log(a);
+             },
+             error: function (ex) {
+             },
+         });
+     });
+     function handleFileSelect(evt) {
+         $('<div id="body-image-uploading" style="margin-top:30px;">Uploading your image...</div>').appendTo('#body-image-uploadbox');
+
+         file = evt.target.files[0];
+         if (file.type.match('image.*')) {
+             if (window.FileReader) {
+                 reader = new FileReader();
+                 reader.onloadend = function (e) {
+                     //showUploadedItem(e.target.result, file.fileName);
+                 };
+                 reader.readAsDataURL(file);
+             }
+             formdata = new FormData();
+             if (formdata) {
+                 formdata.append("default_export_filename", file);
+                 formdata.append("filename", $('#articleContainer').attr('articleid'));
+             }
+             if (formdata) {
+                 $.ajax({
+                     url: '/Home/UploadImage',
+                     type: "POST",
+                     data: formdata,
+                     processData: false,
+                     contentType: false,
+                     success: function (res) {
+                         if (res.success) {
+                             $('#body-image-placeholder').remove();
+                             $('#body-image').attr('src', '/Content/Uploads/' + res.url);
+                      
+                         } else {
+                             //server error
+                   
+                         }
+                         $('#body-image-uploading').remove();
+                     },
+                     error: function (e) {
+                         $('#body-image-uploading').remove();
+                     
+                     }
+                 });
+             }
+         }
+
+     }
+     $(document).on('mouseenter', '#body-image-container', function () {
+         $('#body-image-uploadbox').fadeIn(200);
+     });
+     $(document).on('mouseleave', '#body-image-container', function () {
+         $('#body-image-uploadbox').fadeOut(200);
+     });
+     $(document).on('change', '#files', function (e) { handleFileSelect(e); });
+     function Saving(state) {
+         if ($('#savingMessage').length == 0) {
+             var string = '';
+             switch (state) {
+                 case 0: string = 'saved';
+                     break;
+                 case 1: string = 'saving error';
+                     break;
+                 case 2: string = 'server error';
+                     break;
+             }
+             if (string != '') {
+                 $('<div id="savingMessage" hidden="hidden" style="top:'+(posTop()+20)+'px;">' + string + '</div>').appendTo('body');
+                 
+                 $('#savingMessage').fadeIn(300, function () {
+                     setTimeout(function () { $('#savingMessage').fadeOut('slow', function () { $('#savingMessage').remove(); }); }, 1000);
+                 });
+             } else {
+                 //Dont know how to handle this kind of input
+             }
+         } else {
+             //already have displayed a message
+         }
+     }
+     function posTop() {
+         return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
+     }
+ </script>   
+}
+
+<div class="content-wrapper">
+    
+
+    <output id="list"><span id="uploadedImage"></span></output>
+    <div id="articleContainer" articleID="@Model.ID">
+        @if (User.Identity.IsAuthenticated)
+        {
+            @Html.Raw("<input type=\"button\" value=\"delete\" id=\"deleteArticle\" style=\"float:left; margin-bottom:10px;\"/>");
+            @Html.Raw("<input type=\"button\" value=\"Send notification\" id=\"mail-send\" style=\"float:left; margin-bottom:10px;\" title=\"Send email to contacts in the mailing list notifying them about this event\"/>");
+            <div class="e-active-container">
+                    <input type="checkbox" class="e-active" name="e-active"
+                    @if (Model.Active ?? false)
+                    {
+                        @Html.Raw("checked=\"checked\"");
+                    }
+                    />
+                    <label for="e-active">Active</label>
+                </div>
+                    if (Model.ReminderSendDate != null)
+                    {
+                        int reminderDaysBeforeEvent = (Model.EventDate.Value - Model.ReminderSendDate.Value).Days;
+                        string[] selected = { " ", " ", " ", " " };
+                        selected[reminderDaysBeforeEvent - 1] = "selected=\"selected\"";
+
+                        string reminderString = String.Format("<div id=\"mail-reminder-details\">Reminder email scheduled to be sent <select id=\"reminderEmailOffset\"><option value=\"1\" {0}>1</option><option {1} value=\"2\">2</option><option value=\"3\" {2}>3</option><option value=\"4\" {3}>4</option></select>days before the event, on <span id=\"ReminderSentDate\">{4}</span>. Reminder [{5}] sent</div>", selected[0], selected[1], selected[2], selected[3], Model.ReminderSendDate.Value.ToLongDateString(), (Model.ReminderSent ?? false) ? "Is" : "Not");
+                @Html.Raw(reminderString);
+                    }
+        }
+        <input type="text" id="Title" title="Event Title" value="@Title"
+             @if (!User.Identity.IsAuthenticated)
+             { @Html.Raw("readonly=\"readonly\"");
+             } />
+        <div id="title-date" title="Month of event">@Html.Raw(Model.EventDate == null ? DateTime.UtcNow.AddDays(30).ToString("MMMM") : Model.EventDate.Value.ToString("MMMM"))</div>
+        <input type="text" id="title-type" title="Event type" value="Site Visit" @if (!User.Identity.IsAuthenticated)
+                                                                                 { @Html.Raw("readonly=\"readonly\"")
+                                                                                 } }/>
+        <div id="seats">
+            <div id="seats-remaining" title="Number of seats which remain available" type="text">5</div>
+            <div style="float: left; margin-top: 4px; font-size: 14px;">
+                /
+            </div>
+            <input id="TotalSeats" title="Total number of seats for this event" type="text" value="@Model.TotalSeats" @if (!User.Identity.IsAuthenticated)
+                                                                                                                      { @Html.Raw("readonly=\"readonly\"");
+                                                                                                                      } maxlength="3"/><div style="float: left; margin-top: 2px; font-size: 15px;">
+                                                                                                            seats remaining
+                                                                                                        </div>
+        </div>
+        <input id="rsvp" type="button"  value="rsvp" @if (User.Identity.IsAuthenticated || Model.EventDate.Value < DateTime.Now)
+                                                     { @Html.Raw("disabled=\"disabled\"");
+
+                                                     }
+                                                     else
+                                                     {
+                                                         //Cursory check to see if user has already rsvpd to this event
+                                                         if (HttpContext.Current != null)
+                                                         {
+                                                             if (HttpContext.Current.Request.Cookies.AllKeys.Contains(Model.ID.ToString()))
+                                                             {
+                                                                 if (HttpContext.Current.Request.Cookies[Model.ID.ToString()].Value == true.ToString())
+                                                                 {
+                            @Html.Raw("disabled=\"disabled\"");
+                            @Html.Raw(" title=\"You've already rsvp'd to this event. Go to your emails to modify your reservation\"");
+                                                                 }
+                                                                 else
+                                                                 {
+                            @Html.Raw("title=\"Please RSVP to reserve a spot\"");
+                                                                 }
+                                                             }
+                                                             else
+                                                             {
+
+                                                             }
+
+                                                         }
+                                                     }/>
+
+        <textarea id="Body" @if (!User.Identity.IsAuthenticated)
+                            { @Html.Raw("readonly=\"readonly\"");
+                            }>@Model.Body
+        </textarea>
+        <div id="body-image-container">
+     
+                <img id="body-image" src="@String.Concat("/Content/Uploads/", Model.ID, Model.ImageExtension)" onerror="this.src='/Content/noimage.jpg';"/>
+
+            <div id="body-image-uploadbox" style="display:none;">
+            <form enctype="multipart/form-data">
+                <input type="file" id="files" name="files" accept="image/*" />
+                
+            </form>
+                </div>
+        </div>
+        
+        <div id="map_canvas" style="width: 30%; height: 300px; float: left; clear: both; margin-right: 20px; margin-bottom: 20px; margin-top: 10px;">
+        </div>
+
+        <table id="details">
+            <thead>
+                <tr>
+                    <td style="width: 100px;">Presenter</td>
+                    <td>Date</td>
+                    <td>Time</td>
+                    <td>Venue</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="Presenter" title="Event presenter" type="text" value="@Model.Presenter" style="width:80px;" @if (!User.Identity.IsAuthenticated)
+                                                                                                                               { @Html.Raw("readonly=\"readonly\"");
+                                                                                                                               }/></td>
+                    <td>
+                        <input id="InitialEventDateYear" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Year" />
+                        <input id="InitialEventDateMonth" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Month" />
+                        <input id="InitialEventDateDay" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Day" />
+                        <input id="EventDate" title="Event date" type="text" readonly="readonly" style="text-overflow:ellipsis;"/></td>
+                    <td>
+                        <input id="StartTime_totalHours"type="hidden" value="@(Model.StartTime == null ? 18 : Model.StartTime)" />
+                        <select id="StartTime" title="Start time" type="text" style="width:82px;" @if (!User.Identity.IsAuthenticated)
+                                                                                                  { @Html.Raw("readonly=\"readonly\"");
+                                                                                                  }>
+                        </select>
+                        -
+                        <input id="EndTime_totalHours"type="hidden" value="@(Model.EndTime == null ? 20 : Model.EndTime)" title="Event end time"/>
+                        <select id="EndTime" title="End time" title="Event start time" type="text" style="width:82px;" @if (!User.Identity.IsAuthenticated) { Html.Raw("readonly=\"readonly\""); }>
+                        </select></td>
+                    <td>
+                        <input id="Venue01" class="venue" type="text" value="@Model.Venue1" @if (!User.Identity.IsAuthenticated)
+                                                                                            { @Html.Raw("readonly=\"readonly\" title=\"Venue\"");
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                                      @Html.Raw("title=\"Venue line 1\"");
+                                                                                            }>
+                        <input id="Venue02" class="venue" type="text" value="@Model.Venue2" @if (!User.Identity.IsAuthenticated)
+                                                                                            { @Html.Raw("readonly=\"readonly\" title=\"Venue\"");
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                                      @Html.Raw("title=\"Venue line 2\"");
+                                                                                            }>
+                        <input id="Venue03" class="venue" type="text" value="@Model.Venue3" @if (!User.Identity.IsAuthenticated)
+                                                                                            { @Html.Raw("readonly=\"readonly\" title=\"Venue\"");
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                                      @Html.Raw("title=\"Venue line 3\"");
+                                                                                            }>
+                        <input id="Venue04" class="venue" type="text" value="@Model.Venue4" @if (!User.Identity.IsAuthenticated)
+                                                                                            { @Html.Raw("readonly=\"readonly\" title=\"Venue\"");
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                                      @Html.Raw("title=\"Venue line 4\"");
+                                                                                            }>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+

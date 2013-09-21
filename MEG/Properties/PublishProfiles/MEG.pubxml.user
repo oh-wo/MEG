@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAhhCNB/HUrEm4I+e/V24XLwAAAAACAAAAAAAQZgAAAAEAACAAAACA1zLbL7mmQpQlDPkASXP5DurVoZ/9eD3OoQkoUwUpcQAAAAAOgAAAAAIAACAAAACQAjEeR0Yovgsf/Qe3GRgK74v6Pg8yvmCa5J+tGcYuoiAAAAAJatLLAwdIZebmKcq5NSqrVEfKj+9NtLxK3eRufbCtN0AAAADyIsblBsLliNBNS4D9wXEp+4iC3bavDlncghhmZ+jdko/BF4LowMTMDoUgZJbkrAa+tAJfRy/pE7YyxMTXNWUP</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>05/08/2013 21:37:32</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>05/08/2013 21:37:08</publishTime>
+    </File>
+    <File Include="bin/MEG.dll">
+      <publishTime>06/30/2013 14:36:28</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>05/08/2013 21:37:15</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Mvc.FixedDisplayModes.dll">
+      <publishTime>05/08/2013 21:37:29</publishTime>
+    </File>
+    <File Include="bin/Mvc.Mailer.dll">
+      <publishTime>06/19/2013 21:17:04</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>05/08/2013 21:37:15</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.dll">
+      <publishTime>05/08/2013 21:37:30</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>05/08/2013 21:37:30</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.WebRequest.dll">
+      <publishTime>05/08/2013 21:37:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>05/08/2013 21:37:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>05/08/2013 21:37:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>05/08/2013 21:37:29</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>05/08/2013 21:37:32</publishTime>
+    </File>
+    <File Include="bin/System.Web.Providers.dll">
+      <publishTime>05/08/2013 21:37:31</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>05/08/2013 21:37:15</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>05/08/2013 21:37:23</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>05/08/2013 21:37:23</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>05/08/2013 21:37:24</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>05/08/2013 21:37:32</publishTime>
+    </File>
+    <File Include="Content/black-check-mark-md.png">
+      <publishTime>06/17/2013 23:28:39</publishTime>
+    </File>
+    <File Include="Content/black-cross-md.png">
+      <publishTime>06/17/2013 21:03:48</publishTime>
+    </File>
+    <File Include="Content/CallaghanInnovation.png">
+      <publishTime>05/09/2013 18:52:45</publishTime>
+    </File>
+    <File Include="Content/icons.png">
+      <publishTime>06/23/2013 11:53:24</publishTime>
+    </File>
+    <File Include="Content/ImecheLogo.png">
+      <publishTime>05/08/2013 22:08:37</publishTime>
+    </File>
+    <File Include="Content/MEGLogo-RGB small.jpg">
+      <publishTime>05/08/2013 21:41:05</publishTime>
+    </File>
+    <File Include="Content/noimage.jpg">
+      <publishTime>06/16/2013 23:20:47</publishTime>
+    </File>
+    <File Include="Content/Site.css">
+      <publishTime>06/17/2013 22:10:33</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_flat_75_ffffff_40x100.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_65_ffffff_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_75_dadada_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_75_e6e6e6_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_222222_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_454545_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_888888_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery-ui.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.accordion.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.all.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.autocomplete.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.base.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.button.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.core.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.datepicker.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.dialog.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.progressbar.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.resizable.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.selectable.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.slider.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.tabs.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.theme.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_flat_75_ffffff_40x100.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_55_fbf9ee_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_65_ffffff_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_75_dadada_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_75_e6e6e6_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_222222_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_454545_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_888888_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery-ui.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.accordion.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.autocomplete.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.button.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.core.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.datepicker.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.dialog.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.progressbar.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.resizable.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.selectable.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.slider.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.tabs.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.theme.min.css">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>05/08/2013 21:37:04</publishTime>
+    </File>
+    <File Include="Models/db.edmx.diagram">
+      <publishTime>06/30/2013 13:51:56</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>06/19/2013 21:17:05</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.8.2.js">
+      <publishTime>05/08/2013 21:37:12</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.8.2.min.js">
+      <publishTime>05/08/2013 21:37:12</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.8.24.js">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.8.24.min.js">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Scripts/jquery.unobtrusive-ajax.js">
+      <publishTime>05/08/2013 21:37:15</publishTime>
+    </File>
+    <File Include="Scripts/jquery.unobtrusive-ajax.min.js">
+      <publishTime>05/08/2013 21:37:15</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.js">
+      <publishTime>05/08/2013 21:37:13</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.min.js">
+      <publishTime>05/08/2013 21:37:13</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.js">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.min.js">
+      <publishTime>05/08/2013 21:37:14</publishTime>
+    </File>
+    <File Include="Scripts/knockout-2.2.0.debug.js">
+      <publishTime>05/08/2013 21:37:33</publishTime>
+    </File>
+    <File Include="Scripts/knockout-2.2.0.js">
+      <publishTime>05/08/2013 21:37:33</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.6.2.js">
+      <publishTime>05/08/2013 21:37:15</publishTime>
+    </File>
+    <File Include="Scripts/Reservation.js">
+      <publishTime>06/24/2013 21:04:19</publishTime>
+    </File>
+    <File Include="Scripts/_references.js">
+      <publishTime>05/08/2013 21:37:15</publishTime>
+    </File>
+    <File Include="Views/Account/EmailAlreadyExists.cshtml">
+      <publishTime>05/19/2013 16:33:24</publishTime>
+    </File>
+    <File Include="Views/Account/EmailSent.cshtml">
+      <publishTime>05/19/2013 16:26:42</publishTime>
+    </File>
+    <File Include="Views/Account/IncorrectRegToken.cshtml">
+      <publishTime>05/19/2013 16:22:09</publishTime>
+    </File>
+    <File Include="Views/Account/LogOn.cshtml">
+      <publishTime>05/19/2013 16:00:41</publishTime>
+    </File>
+    <File Include="Views/Account/Register.cshtml">
+      <publishTime>06/15/2013 15:44:47</publishTime>
+    </File>
+    <File Include="Views/Account/VerificationFailure.cshtml">
+      <publishTime>05/19/2013 16:10:21</publishTime>
+    </File>
+    <File Include="Views/Account/VerificationSuccess.cshtml">
+      <publishTime>05/19/2013 16:26:02</publishTime>
+    </File>
+    <File Include="Views/Home/About.cshtml">
+      <publishTime>05/08/2013 22:01:56</publishTime>
+    </File>
+    <File Include="Views/Home/Applicants.cshtml">
+      <publishTime>06/23/2013 18:09:16</publishTime>
+    </File>
+    <File Include="Views/Home/Article.cshtml">
+      <publishTime>06/30/2013 12:17:00</publishTime>
+    </File>
+    <File Include="Views/Home/Contact.cshtml">
+      <publishTime>05/08/2013 22:05:27</publishTime>
+    </File>
+    <File Include="Views/Home/Index.cshtml">
+      <publishTime>06/30/2013 12:13:39</publishTime>
+    </File>
+    <File Include="Views/Home/MailingList.cshtml">
+      <publishTime>06/24/2013 20:56:16</publishTime>
+    </File>
+    <File Include="Views/Home/Register.cshtml">
+      <publishTime>06/15/2013 17:08:49</publishTime>
+    </File>
+    <File Include="Views/Home/ReservationBox.cshtml">
+      <publishTime>06/30/2013 11:27:47</publishTime>
+    </File>
+    <File Include="Views/Home/ReservationDetails.cshtml">
+      <publishTime>06/18/2013 22:28:11</publishTime>
+    </File>
+    <File Include="Views/Home/Reservations.cshtml">
+      <publishTime>06/23/2013 14:50:42</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.cshtml">
+      <publishTime>05/08/2013 21:37:04</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>06/16/2013 14:01:17</publishTime>
+    </File>
+    <File Include="Views/UserMailer/PasswordReset.cshtml">
+      <publishTime>06/19/2013 20:36:34</publishTime>
+    </File>
+    <File Include="Views/UserMailer/Welcome.cshtml">
+      <publishTime>06/30/2013 13:31:49</publishTime>
+    </File>
+    <File Include="Views/UserMailer/_Layout.cshtml">
+      <publishTime>06/19/2013 20:36:32</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>05/08/2013 21:37:04</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>05/08/2013 21:37:04</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>06/30/2013 14:36:42</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

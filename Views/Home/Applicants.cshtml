@@ -1,0 +1,261 @@
+﻿@using MEG.Models;
+@model List<Applicant>
+
+
+<style>
+    thead {
+        background-color: #8ebed7;
+        text-align: left;
+    }
+        thead td[colspan="2"] {
+            text-align: center;
+        }
+    #applicantTableBody > tbody > tr:hover {
+        background-color: #a6dbed;
+    }
+
+    #applicantTableBody > td > div {
+        text-align: center;
+    }
+
+    .editing {
+        background-color: #ccc;
+        border: solid 1px #000;
+    }
+
+    #savingMessage {
+        border: solid 1px #000;
+        width: 100px;
+        height: 20px;
+        position: absolute;
+        top: 20px;
+        right: 100px;
+        z-index: 1;
+        background-color: #000;
+        text-align: center;
+        color: #fff;
+    }
+
+    #applicantTableContainer {
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin: 0 auto;
+        float: left;
+        width: 1000px;
+        cursor:default;
+        margin-bottom:20px;
+        padding-bottom:30px;
+    }
+
+    #applicantTableBody {
+        margin-top: 0px;
+        
+    }
+    #applicantTableBody td {
+        width: 100px;
+        overflow: hidden;
+        white-space: nowrap;
+        padding:5px;
+    }
+    .hiddenText {
+        overflow: hidden;
+        text-overflow:ellipsis;
+        border: solid 1px transparent;
+    }
+        #applicantTableBody td div {
+            width: 100px;
+            
+            text-overflow:ellipsis;
+        }
+    body {
+        overflow-y: hidden;
+    }
+    #applicantTableBodyContainer {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        max-height: 300px;
+    }
+    #applicantTableHead td {
+        width: 102px;
+        padding:0px;
+        padding-left:5px;
+        padding-right:5px;
+    }
+    #helpMessage {
+        display: none;
+        width: 200px;
+        background-color: #ccc;
+        height: 20px;
+        border-radius: 5px;
+        position:absolute;
+        z-index:1;
+        text-align:center;
+        border:#000 solid 1px;
+    }
+    #helpTriangle {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid black;
+    margin-left: 15px;
+    margin-top: 2px;
+    float: left;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        //Enable editing of table elements
+        $('#applicantTableBody').on('dblclick', '.applicantField', function () {
+            $(this).attr('contenteditable', 'true');
+            $(this).addClass('editing');
+            $(this).removeClass('hiddenText');
+            $(this).focus();
+        });
+        $('#applicantTableBody').on('focusout', '.applicantField', function () {
+            var element = this;
+            $(element).attr('contenteditable', 'false');
+            $(element).removeClass('editing');
+            $(element).addClass('hiddenText');
+            SaveApplicantDetails($(element).attr('id'), $(element).closest('tr').attr('id'), $(element).text());
+            $(element).attr('title', $(element).text());
+        });
+        //Configure table width - dirty hack 
+       $('#applicantTableHead').css('width', $('#applicantTableBody').width()); 
+       $('#applicantTableBodyContainer').css('width', $('#applicantTableBody').width());
+        //Setup insturctional message
+       
+       
+      
+    });
+    function SaveApplicantDetails(dataType, applicantID, data) {
+        var data = {
+            ID: applicantID,
+            Data: data,
+            DataType: dataType
+        };
+        var dataToPost = JSON.stringify(data);
+        $.ajax({
+            url: "/Home/EditApplicant",
+            type: "post",
+            contentType: "application/json; charset=utf-8",
+            data: dataToPost,
+            dataType: 'JSON',
+            success: function (a) {
+                if (a) {
+                    Saving(0);
+                } else {
+                    Saving(1);
+                }
+            },
+            error: function () {
+                Saving(2);
+            }
+        });
+    }
+    function Saving(state) {
+        if ($('#savingMessage').length == 0) {
+            var string = '';
+            switch (state) {
+                case 0: string = 'saved';
+                    break;
+                case 1: string = 'saving error';
+                    break;
+                case 2: string = 'server error';
+                    break;
+            }
+            if (string != '') {
+                $('<div id="savingMessage" hidden="hidden">' + string + '</div>').appendTo('body');
+                $('#savingMessage').fadeIn(300, function () {
+                    setTimeout(function () { $('#savingMessage').fadeOut('slow', function () { $('#savingMessage').remove(); }); }, 1000);
+                });
+            } else {
+                //Dont know how to handle this kind of input
+            }
+        } else {
+            //already have displayed a message
+        }
+    }
+</script>
+<div id="helpMessage"><span>Double click any field to edit</span></div>
+<div class="content-wrapper">
+          
+    <div id="applicantTableContainer">
+        <div>
+         <table id="applicantTableHead">
+               <thead>
+                   <tr>
+                       <td rowspan="2">First Name</td>
+                       <td rowspan="2">Last Name</td>
+                       <td rowspan="2">DOB</td>
+                       <td colspan="2">Email</td>
+                       <td colspan="2">Address</td>
+                       <td colspan="2">Phone</td>
+                       <td rowspan="2">Academic Qualifications</td>
+                       <td rowspan="2">Work experience</td>
+                       <td rowspan="2">Employeer/</td>
+                       <td rowspan="2">Member other Learned Societies</td>
+                   </tr>
+                   <tr>
+                       <td>Personal</td>
+                       <td>Business</td>
+                       <td>Personal</td>
+                       <td>Business</td>
+                       <td>Personal</td>
+                       <td>Business</td>
+                   </tr>
+               </thead>
+           </table>
+            </div>
+        <div id="applicantTableBodyContainer">
+            <table id="applicantTableBody">
+                <tbody>
+                    @foreach (Applicant app in Model)
+                    {
+                        <tr id="@app.ID">
+                            <td>
+                                <div id="firstName" class="applicantField hiddenText" title="@app.FirstName">@app.FirstName</div>
+                            </td>
+                            <td>
+                                <div id="lastName" class="applicantField hiddenText" title="@app.LastName">@app.LastName</div>
+                            </td>
+                            <td>
+                                <div id="dob" class="applicantField hiddenText" title="@app.DOB">@app.DOB</div>
+                            </td>
+                            <td>
+                                <div id="personalEmail" class="applicantField hiddenText" title="@app.PersonalEmail">@app.PersonalEmail</div>
+                            </td>
+                            <td>
+                                <div id="businessEmail" class="applicantField hiddenText" title="@app.BusinessEmail">@app.BusinessEmail</div>
+                            </td>
+                            <td>
+                                <div id="personalAddress" class="applicantField hiddenText" title="@app.PersonalAddress">@app.PersonalAddress</div>
+                            </td>
+                            <td>
+                                <div id="businessAddress" class="applicantField hiddenText" title="@app.BusinessAddress">@app.BusinessAddress</div>
+                            </td>
+                            <td>
+                                <div id="personalPhone" class="applicantField hiddenText" title="@app.PersonalPhone">@app.PersonalPhone</div>
+                            </td>
+                            <td>
+                                <div id="businessPhone" class="applicantField hiddenText" title="@app.BusinessPhone">@app.BusinessPhone</div>
+                            </td>
+                            <td>
+                                <div id="acaQual" class="applicantField hiddenText" title="@app.AcademicQualifications">@app.AcademicQualifications</div>
+                            </td>
+                            <td>
+                                <div id="workExp" class="applicantField hiddenText" title="@app.WorkExperience">@app.WorkExperience</div>
+                            </td>
+                            <td>
+                                <div id="employeer" class="applicantField hiddenText" title="@app.Employeer">@app.Employeer</div>
+                            </td>
+                            <td>
+                                <div id="learnedSocieties" class="applicantField hiddenText" title="@app.LearnedSocieties">@app.LearnedSocieties</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

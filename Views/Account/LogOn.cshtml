@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "LogOn";
+}
+
+<form action="/Account/LogOn" method="post" style="width:300px;
+	margin:0px auto; margin-top:40px; float:left;">
+    <div style="font-weight:bold; font-size:20px;">Board Member LogOn</div>
+    <table>
+        <tbody><tr>
+            <td>Email: </td><td><input style="color:#069; font-weight:bold; padding-left:3px;" type="text" name="email"></td>
+        </tr>
+        <tr>
+            <td>Password: </td><td><input style="color:#069; font-weight:bold; padding-left:3px;" type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Log On" name="submit"></td>
+        </tr>
+    </tbody></table>
+    
+</form>

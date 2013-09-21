@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.24.min.js"></script>
+    <script>
+        $(document).on('click', '#megLogo', function () {
+            window.location = "/Home/Index"
+        });
+        $(document).on('click', '#createArticle', function () {
+            var articleTitle; 
+            if ((articleTitle=prompt('Please enter a title for your new article'))) {
+                //create the article - set it up with a guid
+                $('<input type="hidden" name="Title" value="'+articleTitle+'">').appendTo("#createArticleForm");
+                $('#createArticleForm').submit();
+            } else {
+                //dont create the article
+                
+            }
+        });
+        $(document).on('click', '#viewApplicants', function () {
+            window.location = "/Home/Applicants"
+        });
+        $(document).on('click', '#viewMailing', function () {
+            window.location = "/Home/MailingList"
+        });
+        $(document).on('click', '#viewReservations', function () {
+            window.location = "/Home/Reservations"
+        });
+        $(document).on('click', '#logout', function () {
+            window.location = "/Account/Logoff"
+        });
+        
+    </script>
+</head>
+<body>
+    <header>
+       <div class="content-wrapper"> 
+    @if (User.Identity.IsAuthenticated)
+    {
+        
+        <div style="float:right;">Hi @MEG.Helpers.AuthenticationHelper.GetUser(new Guid(User.Identity.Name)).Email</div>
+        <div style="float:right;clear:right;">
+            <form id="createArticleForm" action="/Home/CreateArticle" method="post">
+                <input id="createArticle" type="button" value="create article" />
+            </form>
+            <input id="viewApplicants" type="button" value="applicants"/>
+            <input id="viewMailing" type="button" value="mailing list"/>
+            <input id="viewReservations" type="button" value="reservations"/>
+            <input id="logout" type="button" value="logout"/>
+            </div>
+    }
+            <img src="/Content/MEGLogo-RGB%20small.jpg" id="megLogo">
+            <table id="nav" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td><a href="/Home/Upcoming" title="Filter by upcoming events">Upcoming Events</a></td>
+                    <td><a href="/Home/Past" title="Filter by past events">Past Events</a></td>
+                    <td><a href="/Home/Register" title="Register yourself as a MEG member">Register</a></td>
+                    <td><a href="/Home/About" title="Find out about the group">About</a></td>
+                    <td><a href="/Home/Contact" title="MEG contacts">Contact</a></td>
+                </tr>
+                    </tbody>
+            </table>
+           </div>
+    </header>
+    @RenderBody()
+    <footer>
+        <div class="content-wrapper">
+            <div class="float-left" style="width:100%;">
+                 @if (!User.Identity.IsAuthenticated)
+    {
+                <div id="boardMenu" style="float:left; margin-top:20px; font-size:12px; line-height:170%;">BOARD MEMBERS<br><a href="/Account/Logon">Log On</a><br><a href="/Account/Register">Register</a></div>
+                 }
+                     <div id="associatedLinks" style="float:right;"><img src="/Content/CallaghanInnovation.png" style="width: 400px; float: left; margin-top: 20px;"><img src="/Content/ImecheLogo.png" style="height:126px; width:400px;"></div>
+                
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

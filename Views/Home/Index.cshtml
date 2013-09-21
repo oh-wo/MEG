@@ -1,0 +1,206 @@
+﻿@using MEG.Models;
+@model List<Event>
+@{
+    ViewBag.Title = "MEG - Mechanical Engineering Group";
+}
+<style>
+    .e-container {
+        float: left;
+        width: 96%;
+        position:relative;
+        clear: both;
+        margin-bottom: 30px;
+        border-bottom: solid #ccc 1px;
+        padding: 2%;
+        cursor: pointer;
+    }
+
+        .e-container:hover {
+            box-shadow: #ccc 7px 6px 10px -1px;
+        }
+
+    .e-title {
+        font-weight: bold;
+        font-size: 25px;
+        width: 100%;
+        float: left;
+        clear: both;
+    }
+
+    .e-type {
+        float: left;
+        clear: left;
+        font-weight: bold;
+    }
+
+    .e-date {
+        float: left;
+        clear: left;
+        font-style: italic;
+    }
+
+    .e-rsvp {
+        float: right;
+    }
+
+    .e-seats {
+        float: right;
+        margin-top: 4px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .e-body {
+        float: left;
+        width: 80%;
+        clear: both;
+        margin-top: 10px;
+        text-align: justify;
+    }
+
+    .e-image {
+        width: 18%;
+        float: right;
+    }
+
+    #cover {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.75);
+        top: 0px;
+        left: 0px;
+    }
+
+    #rsvpBox {
+        position: absolute;
+        z-index: 2;
+        width: 50%;
+        height: 50%;
+        background-color: #fff;
+        border: solid 5px #ccc;
+        top: 25%;
+        left: 25%;
+    }
+
+    .AddToMailingList {
+        background: #a90329;
+        background: -moz-linear-gradient(top, #a90329 0%, #8f0222 44%, #6d0019 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a90329), color-stop(44%,#8f0222), color-stop(100%,#6d0019));
+        background: -webkit-linear-gradient(top, #a90329 0%,#8f0222 44%,#6d0019 100%);
+        background: -o-linear-gradient(top, #a90329 0%,#8f0222 44%,#6d0019 100%);
+        background: -ms-linear-gradient(top, #a90329 0%,#8f0222 44%,#6d0019 100%);
+        background: linear-gradient(to bottom, #a90329 0%,#8f0222 44%,#6d0019 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=0 );
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+    .complete {
+        float: left;
+        margin-top: 20px;
+    }
+
+    .rsvpMistake {
+        float: left;
+        margin-top: 20px;
+    }
+
+    .rsvpMailing {
+        float: left;
+        margin-top: 40px;
+    }
+
+    .e-active-container {
+        position: absolute;
+        right: 19px;
+        top: 25px;
+    }
+</style>
+<script>
+    $(document).on('click', '.e-container', function (e) {
+        if ($(e.originalEvent.target).hasClass('e-link')) {
+            window.location = '/Home/Article?articleID=' + $(this).attr('articleID');
+        }
+    });
+    $(document).on('change', '.e-active', function (e) {
+        var data = {
+            eID: $(this).closest('.e-container').attr('articleid'),
+            state: $(this).attr('checked') == 'checked',
+        };
+        var dataToPost = JSON.stringify(data);
+        $.ajax({
+            type: "POST",
+            url: "/Home/ChangeEventActivity",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: dataToPost,
+            success: function (a) {
+                console.log(a);
+            },
+            error: function (ex) {
+            },
+        });
+    });
+</script>
+<script src="/Scripts/Reservation.js"></script>
+<div class="content-wrapper">
+    @foreach (Event e in Model)
+    {
+        if (e.Active ?? false || User.Identity.IsAuthenticated)
+        {
+        <div class="e-container" articleID="@e.ID" >
+            <div class="e-title e-link">@e.Title</div>
+            <div class="e-type e-link">Site Visit</div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="e-active-container">
+                    <input type="checkbox" class="e-active" name="e-active"
+                    @if (e.Active ?? false)
+                    {
+                        @Html.Raw("checked=\"checked\"");
+                    }
+                    />
+                    <label for="e-active">Active</label>
+                </div>
+            }
+            <input class="e-rsvp" type="button" value="rsvp" @{if (User.Identity.IsAuthenticated || e.EventDate.Value < DateTime.Now)
+                                                               {
+                                                               @Html.Raw("disabled=\"disabled\"");
+                                                               }
+                                                               else
+                                                               {
+                                                                   //Cursory check to see if user has already rsvpd to this event
+                                                                   if (HttpContext.Current != null)
+                                                                   {
+                                                                       if (HttpContext.Current.Request.Cookies.AllKeys.Contains(e.ID.ToString()))
+                                                                       {
+                                                                           if (HttpContext.Current.Request.Cookies[e.ID.ToString()].Value == true.ToString())
+                                                                           {
+                            @Html.Raw("disabled=\"disabled\"");
+                            @Html.Raw(" title=\"You've already rsvp'd to this event. Go to your emails to modify your reservation\"");
+                                                                           }
+                                                                       }
+                                                                       else
+                                                                       {
+
+                                                                       }
+
+                                                                   }
+                                                               }}/>
+            <div class="e-seats">@e.SeatsTaken.GetValueOrDefault() / @e.TotalSeats.GetValueOrDefault() seats remaining</div>
+            <div class="e-date">@e.EventDate.GetValueOrDefault().ToLongDateString()</div>
+            <div class="e-body e-link">@e.Body</div>
+
+
+            <img class="e-image e-link" src="@String.Concat("/Content/Uploads/", e.ID, e.ImageExtension)" onerror="this.src='/Content/noimage.jpg';">
+
+            @Html.Partial("ReservationBox", e)
+        </div>
+        }
+    }
+</div>

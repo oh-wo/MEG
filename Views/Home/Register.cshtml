@@ -1,0 +1,224 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<div id="body">
+
+    <section class="content-wrapper main-content clear-fix">
+
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+        <script>
+            $(document).on('click', '#submitReg', function (e) {
+                var validationErrors = false;
+                var validationString = "";
+                if ($('#regFirstName').val() == "") { validationErrors = true; validationString += "Please enter your first name.<br/>"; }
+                if ($('#regLastName').val() == "") { validationErrors = true; validationString += "Please enter your last name.<br/>"; }
+                if ($('#regDob').val() == "") { validationErrors = true; validationString += "Please enter your date of birth.<br/>"; }
+                if ($('#regPersonalAddress').val() == "") { validationErrors = true; validationString += "Please enter your address.<br/>"; }
+                if ($('#regBusinessAddress').val() == "") { validationErrors = true; validationString += "Please enter your business address.<br/>"; }
+                if ($('#regPersonalPhone').val() == "") { validationErrors = true; validationString += "Please enter your phone number.<br/>"; }
+                if ($('#regBusinessPhone').val() == "") { validationErrors = true; validationString += "Please enter your business phone number.<br/>"; }
+                if ($('#regPersonalEmail').val() == "") { validationErrors = true; validationString += "Please enter your email address.<br/>"; }
+                if ($('#regBusinessEmail').val() == "") { validationErrors = true; validationString += "Please enter your business email address.<br/>"; }
+                if ($('#regAcQual').val() == "") { validationErrors = true; validationString += "Please enter your academic qualifications.<br/>"; }
+                if ($('#regWorkExp').val() == "") { validationErrors = true; validationString += "Please enter your work experience.<br/>"; }
+                if ($('#regEmployeer').val() == "") { validationErrors = true; validationString += "Please enter your occupational details.<br/>"; }
+                if ($('#regAcceptDec').attr('checked') != "checked") { validationErrors = true; validationString += "You cannot apply for membership if you cannot declare yourself suitable for membership.<br/>"; }
+
+                if (validationErrors) {
+                    
+                    $('#registrationValidationErrors').html(validationString);
+                }
+                else {
+                    $('body').addClass('stop-scrolling');
+                    var data = {
+                        FirstName: $('#regFirstName').val(),
+                        LastName: $('#regLastName').val(),
+                        DOB: $('#regDob').val(),
+                        PersonalAddress: $('#regPersonalAddress').val(),
+                        BusinessAddress: $('#regBusinessAddress').val(),
+                        PreferredAddress: $('.regPrefAddress:checked').val(),
+                        PersonalPhone: $('#regPersonalPhone').val(),
+                        BusinessPhone: $('#regBusinessPhone').val(),
+                        PreferredPhone: $('.regPrefPhone:checked').val(),
+                        PersonalEmail: $('#regPersonalEmail').val(),
+                        BusinessEmail: $('#regBusinessEmail').val(),
+                        PreferredEmail: $('.regPrefEmail:checked').val(),
+                        AcademicQualifications: $('#regAcQual').val(),
+                        WorkExperience: $('#regWorkExp').val(),
+                        Employeer: $('#regEmployeer').val(),
+                        LearnedSocieties: $('#regMembOther').val(),
+                    };
+                    var dataToPost = JSON.stringify(data);
+                    console.log(dataToPost);
+                    $.ajax({
+                        url: "/Home/CreateApplicant",
+                        type: "post",
+                        contentType: "application/json; charset=utf-8",
+                        data: dataToPost,
+                        dataType:'JSON',
+                        success: function (a) {
+                            if (a) {
+                                alert('Data saved successfully!');
+                            } else {
+                                alert('Error saving data');
+                            }
+                        },
+                        error: function () {
+                            alert('Error sending data');
+                        }
+                    });
+                    var regHeight = 100;
+                    var regWidth = 500;
+                    $('<div id="fadeout" style="position:absolute; top:' + $('body').scrollTop() + 'px; left:0px; background-color:#000; opacity:0.8; z-index:5; height:' + $(window).height() + 'px; width:' + $(window).width() + 'px;"></div>').appendTo('body');
+                    $('<div id="regContainer" style="font-weight:bold; padding:10px; z-index:10; background-color:#fff; border-radius:10px; border:solid 5px #000; position:absolute; top:' + ($('body').scrollTop() + ($(window).height() - regHeight) / 2) + 'px; left:' + ($(window).width() - regWidth) / 2 + 'px; height:' + regHeight + 'px; width:' + regWidth + 'px;"></div>').appendTo('body');
+                    var regDetails = '<div style="font-size:20 width:100%; text-align:center;"><br/>Thanks, your application was submitted successfully.<br/><br/> Please allow 1-2 months for your application to be approved. </div>';
+                    $('#regContainer').html(regDetails);
+                    setTimeout("location.href = '/Home/';", 1500);
+                }
+            });
+
+            $(document).ready(function () {
+                var x= new Date();
+                var yearString = parseInt(x.getFullYear())-100+":"+x.getFullYear();
+                $('#regDob').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    maxDate : x,
+                    "yearRange" : yearString,
+                    dateFormat: 'DD, d MM, yy',
+                });
+            });
+        </script>
+
+        <div style="float: right; margin-right: 20px; margin-bottom: 10px;">
+            <span style="float: right;">Application for Membership of</span><br>
+            <span style="float: right; font-weight: bold;">THE MECHANICAL ENGINEERING GROUP</span><br>
+            <span style="float: right;">A Technical Group of the Institution of Professional Engineers New Zealand</span><br>
+        </div>
+        
+      
+            <table id="registerTable">
+                <tbody>
+                    <tr>
+                        <td>First Name</td>
+                        <td>
+                            <input type="text" value="" id="regFirstName"></td>
+                        <td>Last Name</td>
+                        <td>
+                            <input type="text" value="" id="regLastName">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Date of Birth</td>
+                        <td>
+                            <input type="text"  value="" id="regDob"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Personal Address</td>
+                        <td colspan="3">
+                            <input type="text" value="" id="regPersonalAddress"></td>
+                    </tr>
+                    <tr>
+                        <td>Business Address</td>
+                        <td colspan="3">
+                            <input type="text" value="" id="regBusinessAddress"></td>
+                    </tr>
+                    <tr>
+                        <td>Preferred Address</td>
+                        <td colspan="3">
+                            <div style="float: left;">Personal</div>
+                            <input type="radio" value="Personal" class="regPrefAddress" id="regPreferredAddress01">
+                            <div style="float: left;">Business</div>
+                            <input type="radio" value="Business" class="regPrefAddress" id="regPreferredAddress02">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Personal Phone</td>
+                        <td>
+                            <input type="text" value=""  id="regPersonalPhone"></td>
+                        <td>Business Phone</td>
+                        <td>
+                            <input type="text" value=""  id="regBusinessPhone"></td>
+                    </tr>
+                    <tr>
+                        <td>Preferred Phone</td>
+                        <td colspan="3">
+                            <div style="float: left;">Personal</div>
+                            <input type="radio" value="Personal" class="regPrefPhone" id="regPrefPhone01">
+                            <div style="float: left;">Business</div>
+                            <input type="radio" value="Business" class="regPrefPhone" id="regPrefPhone02"></td>
+                    </tr>
+                    <tr>
+                        <td>Personal Email</td>
+                        <td>
+                            <input type="text" value="" id="regPersonalEmail"></td>
+                        <td>Business Email</td>
+                        <td>
+                            <input type="text" value="" id="regBusinessEmail"></td>
+                    </tr>
+                    <tr>
+                        <td>Preferred Email</td>
+                        <td colspan="3">
+                            <div style="float: left;">Personal</div>
+                            <input type="radio" value="Personal" class="regPrefEmail" id="regPrefEmail01">
+                            <div style="float: left;">Business</div>
+                            <input type="radio" value="Business" class="regPrefEmail" id="regPrefEmail02">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1">Academic Qualifications</td>
+                        <td colspan="3">
+                            <input type="text"  value="" id="regAcQual"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="1">Work Experience</td>
+                        <td colspan="3">
+                            <input type="text"  value="" id="regWorkExp"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="1">Employeer/Occupation</td>
+                        <td colspan="3">
+                            <input type="text"  value="" id="regEmployeer"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="1">Membership of other<br>
+                            learned societies</td>
+                        <td colspan="3">
+                            <input type="text" value="" id="regMembOther"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="1">Declaration</td>
+                        <td colspan="3">
+                            <div style="text-align: justify; width: 100%; float: right;">
+                                I believe myself to be a proper person to be elected a member of the Mechanical Engineering Group and do hereby 
+promise that, in the event of my election, I will be governed by the rules of the Group for the time being in force, or as 
+they may be amended, and that I will promote the objects of the Group as far as may be in my power.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1"></td>
+                        <td colspan="3">
+                            <input type="checkbox" value="I accept" id="regAcceptDec">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div id="registrationValidationErrors" style="min-height: 20px; color: #f00; font-weight: bold; text-align: left;"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Submit Application</td>
+                        <td colspan="3">
+                            <input type="submit" id="submitReg" name="submit" value="Submit">
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+    </section>
+</div>

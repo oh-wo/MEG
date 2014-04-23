@@ -19,49 +19,50 @@
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Type="Guid" Name="ID" Nullable="false" />
-    <Property Type="String" Name="FirstName" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="LastName" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="DateTime" Name="DOB" Precision="7" />
-    <Property Type="String" Name="PersonalAddress" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="BusinessAddress" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="PreferredAddress" MaxLength="15" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="PersonalPhone" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="BusinessPhone" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="PreferredPhone" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="PersonalEmail" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="BusinessEmail" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="PreferredEmail" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="AcademicQualifications" MaxLength="300" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="WorkExperience" MaxLength="300" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Employeer" MaxLength="300" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="LearnedSocieties" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="DOB" Type="DateTime" Precision="7" />
+    <Property Name="PersonalAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="BusinessAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="PreferredAddress" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="PersonalPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BusinessPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PreferredPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PersonalEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BusinessEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PreferredEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AcademicQualifications" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="WorkExperience" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="Employeer" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="LearnedSocieties" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="Event">
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Type="Guid" Name="ID" Nullable="false" />
-    <Property Type="Guid" Name="CreatedBy" />
-    <Property Type="DateTime" Name="Created" Precision="7" />
-    <Property Type="String" Name="Title" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Body" MaxLength="2000" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Presenter" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="DateTime" Name="EventDate" Precision="7" />
-    <Property Type="Double" Name="StartTime" />
-    <Property Type="Double" Name="EndTime" />
-    <Property Type="String" Name="Venue1" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Venue2" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Venue3" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Venue4" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="Int32" Name="TotalSeats" />
-    <Property Type="Int32" Name="SeatsTaken" />
-    <Property Type="DateTime" Name="DateTimeStamp" Precision="7" />
-    <Property Type="Boolean" Name="HasImage" />
-    <Property Type="String" Name="ImageExtension" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="DateTime" Name="ReminderSendDate" Precision="7" />
-    <Property Type="Boolean" Name="ReminderSent" />
-    <Property Type="Boolean" Name="Active" />
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="CreatedBy" Type="Guid" />
+    <Property Name="Created" Type="DateTime" Precision="7" />
+    <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Body" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+    <Property Name="Presenter" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="EventDate" Type="DateTime" Precision="7" />
+    <Property Name="StartTime" Type="Double" />
+    <Property Name="EndTime" Type="Double" />
+    <Property Name="Venue1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Venue2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Venue3" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Venue4" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="TotalSeats" Type="Int32" />
+    <Property Name="SeatsTaken" Type="Int32" />
+    <Property Name="DateTimeStamp" Type="DateTime" Precision="7" />
+    <Property Name="HasImage" Type="Boolean" />
+    <Property Name="ImageExtension" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="ReminderSendDate" Type="DateTime" Precision="7" />
+    <Property Name="ReminderSent" Type="Boolean" />
+    <Property Name="Active" Type="Boolean" />
+    <Property Name="TitleType" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="MUser" Relationship="MegDatabaseModel.FK__Event__CreatedBy__108B795B" FromRole="Event" ToRole="MUser" />
     <NavigationProperty Name="Reservations" Relationship="MegDatabaseModel.FK__Reservati__Event__276EDEB3" FromRole="Event" ToRole="Reservation" />
   </EntityType>
@@ -69,49 +70,49 @@
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Type="Guid" Name="ID" Nullable="false" />
-    <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Name" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="DateTime" Name="Added" Precision="7" />
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Added" Type="DateTime" Precision="7" />
   </EntityType>
   <EntityType Name="MUser">
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Type="Guid" Name="ID" Nullable="false" />
-    <Property Type="String" Name="Email" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="Guid" Name="EmailCode" />
-    <Property Type="Boolean" Name="EmailVerified" />
-    <Property Type="String" Name="FirstName" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="LastName" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Password" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="DateTime" Name="LastActivityDate" Precision="0" />
-    <Property Type="String" Name="PasswordQuestion" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="PasswordAnswer" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Mobile" MaxLength="50" FixedLength="true" Unicode="true" />
-    <Property Type="Boolean" Name="IsLockedOut" />
-    <Property Type="DateTime" Name="Created" Precision="7" />
-    <Property Type="DateTime" Name="LastLoginDate" Precision="7" />
-    <Property Type="DateTime" Name="LastPasswordChangeDate" Precision="7" />
-    <Property Type="DateTime" Name="LastLockoutDate" Precision="7" />
-    <Property Type="Int32" Name="FailedPasswordAttemptCount" />
-    <Property Type="Int32" Name="FailedPasswordAnswerAttemptCount" />
-    <Property Type="Boolean" Name="IsBusinessRelated" />
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="EmailCode" Type="Guid" />
+    <Property Name="EmailVerified" Type="Boolean" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastActivityDate" Type="DateTime" Precision="0" />
+    <Property Name="PasswordQuestion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PasswordAnswer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="IsLockedOut" Type="Boolean" />
+    <Property Name="Created" Type="DateTime" Precision="7" />
+    <Property Name="LastLoginDate" Type="DateTime" Precision="7" />
+    <Property Name="LastPasswordChangeDate" Type="DateTime" Precision="7" />
+    <Property Name="LastLockoutDate" Type="DateTime" Precision="7" />
+    <Property Name="FailedPasswordAttemptCount" Type="Int32" />
+    <Property Name="FailedPasswordAnswerAttemptCount" Type="Int32" />
+    <Property Name="IsBusinessRelated" Type="Boolean" />
     <NavigationProperty Name="Events" Relationship="MegDatabaseModel.FK__Event__CreatedBy__108B795B" FromRole="MUser" ToRole="Event" />
   </EntityType>
   <EntityType Name="Reservation">
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Type="Guid" Name="ID" Nullable="false" />
-    <Property Type="String" Name="Name" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Type="Int32" Name="NoSeats" />
-    <Property Type="Boolean" Name="MemberMeg" />
-    <Property Type="Boolean" Name="MemberIpenz" />
-    <Property Type="Boolean" Name="MemberImeche" />
-    <Property Type="DateTime" Name="Timestamp" Precision="7" />
-    <Property Type="Guid" Name="EventID" />
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="NoSeats" Type="Int32" />
+    <Property Name="MemberMeg" Type="Boolean" />
+    <Property Name="MemberIpenz" Type="Boolean" />
+    <Property Name="MemberImeche" Type="Boolean" />
+    <Property Name="Timestamp" Type="DateTime" Precision="7" />
+    <Property Name="EventID" Type="Guid" />
     <NavigationProperty Name="Event" Relationship="MegDatabaseModel.FK__Reservati__Event__276EDEB3" FromRole="Reservation" ToRole="Event" />
   </EntityType>
   <Association Name="FK__Event__CreatedBy__108B795B">

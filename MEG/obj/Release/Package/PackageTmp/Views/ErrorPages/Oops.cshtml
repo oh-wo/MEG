@@ -1,0 +1,113 @@
+﻿
+<style>
+    .errorContainer {
+        float: left;
+        clear: left;
+        border: #ccc solid 1px;
+        box-shadow: #B8B8B8 7px 7px 3px -4px;
+        padding: 10px;
+        margin-bottom: 100px;
+        margin-top:50px;
+    }
+    .errorMessage {
+        float:left;
+        clear:left;
+    }
+    .errorForm {
+        float: left;
+        clear: left;
+        margin-top: 20px;
+        width: 100%;
+    }
+        .errorForm > label {
+            float: left;
+            clear: left;
+            margin-bottom: 5px;
+        }
+        .errorForm > input {
+            clear: left;
+            float: left;
+            margin-bottom: 10px;
+        }
+        .errorForm > textarea {
+            clear: left;
+            float: left;
+            margin-bottom: 10px;
+            resize:none;
+            width:70%;
+            height:100px;
+        }
+        .invisible{
+            display:none;
+        }
+    #errorSubmitMessage {
+        float: left;
+        clear: left;
+        margin-left: 4px;
+        margin-bottom: 10px;
+    }
+    #loadingSpinner {
+        float: left;
+        margin-left: 4px;
+        margin-top: 6px;
+    }
+</style>
+<script>
+    $(document).ready(function (e) {
+        $(document).on('click', '#submitError', function (e) {
+            if ($('#errorDescription').val() != '') {
+                //submit data
+                $('#submitError').attr('disabled', 'disabled').val('submitting...');
+                $('#errorDescription').attr('disabled', 'disabled');
+                $('#errorSubmitMessage').addClass('invisible');
+                $('#loadingSpinner').removeClass('invisible');
+                SubmitUserError();
+            } else {
+                $('#errorSubmitMessage').removeClass('invisible');
+            }
+        })
+    });
+
+    function SubmitUserError() { 
+        var data = {
+            ErrorPath: $('#urlPath').val(),
+            UserErrorMessage: $('#errorDescription').val(),
+        };
+
+        var dataToPost = JSON.stringify(data);
+
+        $.ajax({
+            type: "POST",
+            url: "/ErrorPages/SubmitUserErrorMessage",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: dataToPost,
+            success: function (Success) {
+                if (Success) {
+                    $('.errorContainer').html('<div class="successMessage">Thanks very much, the error has been reported.</div>');
+                } else {
+                    $('.errorContainer').html('<div class="successMessage">Error submitting your response. Please reload the page and try again.</div>');
+                };
+            },
+            error: function (ex) {
+            },
+        });
+
+    }
+</script>
+<input type="hidden" value="@Html.Raw(Request.Url.ToString().Split('?')[1].ToString())" id="urlPath"/>
+<div class="content-wrapper">
+    <div class="errorContainer">
+        <div class="errorMessage">
+            <b>Oh no! </b>
+            It looks like there was an error. <br />If you want to help us out, please fill out the form below and tell us what you were doing when this happened so we can fix the problem.
+        </div>
+        <form method="post" class="errorForm">
+            <label for="whatHappened">Please tell us what happened:<br /><i> e.g. I was trying to rsvp to an event and when I clicked RSVP I was taken here.</i></label>
+            <textarea id="errorDescription"></textarea>
+            <div id="errorSubmitMessage" class="invisible">Please enter information about the error.</div>
+            <input type="button" id="submitError" value="Submit error" />
+            <img class="invisible" id="loadingSpinner" src="/Content/loading.gif" />
+        </form>
+    </div>
+</div>

@@ -7,12 +7,12 @@
     .e-container {
         float: left;
         width: 96%;
-        position:relative;
         clear: both;
         margin-bottom: 30px;
         border-bottom: solid #ccc 1px;
         padding: 2%;
         cursor: pointer;
+        position:relative;
     }
 
         .e-container:hover {
@@ -123,7 +123,7 @@
 </style>
 <script>
     $(document).on('click', '.e-container', function (e) {
-        if ($(e.originalEvent.target).hasClass('e-link')) {
+        if (!$(e.originalEvent.target).is('input')) {//ie we dont want to navigate away from the page if they clicked on not a button
             window.location = '/Home/Article?articleID=' + $(this).attr('articleID');
         }
     });
@@ -148,14 +148,19 @@
     });
 </script>
 <script src="/Scripts/Reservation.js"></script>
-<div class="content-wrapper">
+<meta name="description=" content="Linked with the Institution of Mechanical Engineers, London, the Mechanical Engineering Group (which is particularly active in Auckland and Wellington) brings together engineers in the general mechanical field and holds regular meetings during the year." />
+<div class=" content-wrapper">
+    @if (Model.Count == 0)
+    {
+        <div class="none-found">No results found.</div>
+    }
     @foreach (Event e in Model)
     {
-        if (e.Active ?? false || User.Identity.IsAuthenticated)
+        if ((e.Active ?? false) || User.Identity.IsAuthenticated)
         {
         <div class="e-container" articleID="@e.ID" >
-            <div class="e-title e-link">@e.Title</div>
-            <div class="e-type e-link">Site Visit</div>
+            <div class="e-title">@e.Title</div>
+            <div class="e-type">@e.TitleType</div>
             @if (User.Identity.IsAuthenticated)
             {
                 <div class="e-active-container">
@@ -168,12 +173,13 @@
                     <label for="e-active">Active</label>
                 </div>
             }
-            <input class="e-rsvp" type="button" value="rsvp" @{if (User.Identity.IsAuthenticated || e.EventDate.Value < DateTime.Now)
+            <input class="e-rsvp" type="button" @{if (User.Identity.IsAuthenticated || e.EventDate.Value < DateTime.Now)
                                                                {
-                                                               @Html.Raw("disabled=\"disabled\"");
+                                                               @Html.Raw("disabled=\"disabled\" value=\"rsvp closed\"");
                                                                }
                                                                else
                                                                {
+                                                     @Html.Raw("value=\"rsvp\" ");
                                                                    //Cursory check to see if user has already rsvpd to this event
                                                                    if (HttpContext.Current != null)
                                                                    {
@@ -192,12 +198,12 @@
 
                                                                    }
                                                                }}/>
-            <div class="e-seats">@e.SeatsTaken.GetValueOrDefault() / @e.TotalSeats.GetValueOrDefault() seats remaining</div>
+            <div class="e-seats">@(e.TotalSeats.GetValueOrDefault() - e.SeatsTaken.GetValueOrDefault()) / @e.TotalSeats.GetValueOrDefault() seats remaining</div>
             <div class="e-date">@e.EventDate.GetValueOrDefault().ToLongDateString()</div>
-            <div class="e-body e-link">@e.Body</div>
+            <div class="e-body">@e.Body</div>
 
 
-            <img class="e-image e-link" src="@String.Concat("/Content/Uploads/", e.ID, e.ImageExtension)" onerror="this.src='/Content/noimage.jpg';">
+            <img class="e-image" src="@String.Concat("/Content/Uploads/", e.ID, e.ImageExtension)" onerror="this.src='/Content/noimage.jpg';">
 
             @Html.Partial("ReservationBox", e)
         </div>

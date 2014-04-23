@@ -12,11 +12,13 @@
     <div class="rsvpVenue rsvpDetails">@{String.Format("{0}{1}{2}{3}", String.Concat(Model.Venue1, ", "), String.Concat(Model.Venue2, ", "), String.Concat(Model.Venue3, ", "), Model.Venue4);}</div>
     <div class="rsvpName rsvpInput">
         <div style="float: left; width: 140px; margin-right: 10px;">Name: </div>
-        <input style="float: left; color: #F33;" type="text" class="rsvpUserName"><div class="userNameValidationError" style="margin-top: 5px; display: none; color: #f00; font-weight: normal; float: left; font-size: 13px;">Please enter your name</div>
+        <input style="float: left; color: #F33; border: #ccc solid 1px; " type="text" class="rsvpUserName"/>
+        <div class="userNameValidationError" style="margin-top: 5px; display: none; color: #f00; font-weight: normal; float: left; font-size: 13px;">Please enter your name</div>
     </div>
     <div class="rsvpEmail rsvpInput">
         <div style="float: left; width: 140px; margin-right: 10px;">Email: </div>
-        <input style="float: left; color: #F33;" type="text" class="rsvpUserEmail"><div class="userEmailValidationError" style="margin-top: 5px; display: none; color: #f00; font-weight: normal; float: left; font-size: 13px;">Please enter your email</div>
+        <input style="float: left; color: #F33; border: #ccc solid 1px;" type="text" class="rsvpUserEmail"/>
+        <div class="userEmailValidationError" style="margin-top: 5px; display: none; color: #f00; font-weight: normal; float: left; font-size: 13px;">Please enter your email</div>
     </div>
     <div class="rsvpSeats rsvpInput">
         <div style="float: left; width: 140px; margin-right: 10px;">Seats required: </div>

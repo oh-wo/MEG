@@ -40,6 +40,7 @@ namespace MEG.Models
         public Nullable<System.DateTime> ReminderSendDate { get; set; }
         public Nullable<bool> ReminderSent { get; set; }
         public Nullable<bool> Active { get; set; }
+        public string TitleType { get; set; }
     
         public virtual MUser MUser { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }

@@ -187,7 +187,8 @@ namespace MEG.Controllers
                 {
                     string path = "/Content/Uploads/";
                     string fileExtension = System.IO.Path.GetExtension(Request.Files[0].FileName);
-                    string filenameWithExtension = String.Concat(filename, fileExtension);
+                    Guid articleID = new Guid(Request.UrlReferrer.ToString().Split('=')[1]);
+                    string filenameWithExtension = String.Concat(articleID.ToString(), fileExtension);
                     Request.Files[0].SaveAs(Path.Combine(Server.MapPath("/Content/Uploads"), filenameWithExtension));
                     using (MegDatabaseEntities db = new MegDatabaseEntities())
                     {
@@ -299,6 +300,9 @@ namespace MEG.Controllers
                             case "reminderEmailOffset":
                                 article.ReminderSendDate = article.EventDate.Value.AddDays(-Int32.Parse(articleMods.Value));
                                 aus.Value = article.ReminderSendDate.Value.ToLongDateString();
+                                break;
+                            case "title-type":
+                                article.TitleType = articleMods.Value;
                                 break;
                         }
                         db.SaveChanges();
@@ -757,5 +761,7 @@ namespace MEG.Controllers
             public string Data { get; set; }
             public string DataType { get; set; }
         }
+
+        
     }
 }

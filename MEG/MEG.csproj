@@ -42,6 +42,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Elmah">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mvc.Mailer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -139,6 +142,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
+    <Compile Include="Controllers\ErrorPagesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -180,11 +185,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Content\black-check-mark-md.png" />
     <Content Include="Content\black-cross-md.png" />
     <Content Include="Content\CallaghanInnovation.png" />
+    <Content Include="Content\fsae-logo.png" />
     <Content Include="Content\icons.png" />
     <Content Include="Content\ImecheLogo.png" />
+    <Content Include="Content\IPENZLogo-REVERSED.png" />
+    <Content Include="Content\loading.gif" />
     <Content Include="Content\MEGLogo-RGB small.jpg" />
     <Content Include="Content\noimage.jpg" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -241,6 +250,12 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\Uploads\4d11615c-542f-431e-91a5-fb0eaa4a758f.jpg" />
+    <Content Include="Content\Uploads\7c28cd95-c77c-4f5c-a2f2-6f6191d0d06b.jpg" />
+    <Content Include="Content\Uploads\932007ce-7421-4583-9fd0-c85c55c1dfb7.bmp" />
+    <Content Include="Content\Uploads\932007ce-7421-4583-9fd0-c85c55c1dfb7.jpg" />
+    <Content Include="Content\Uploads\932007ce-7421-4583-9fd0-c85c55c1dfb7.png" />
+    <Content Include="Content\ZeroClip.swf" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <EntityDeploy Include="Models\db.edmx">
@@ -260,7 +275,10 @@
       <DependentUpon>db.edmx</DependentUpon>
       <LastGenOutput>db.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\ZeroClipboard.js" />
+    <Content Include="Views\ErrorPages\Oops.cshtml" />
     <None Include="Properties\PublishProfiles\MEG.pubxml" />
+    <Content Include="robots.txt" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -307,14 +325,11 @@
     <Content Include="Views\Home\Reservations.cshtml" />
     <Content Include="Views\Home\ReservationBox.cshtml" />
     <Content Include="Views\Home\ReservationDetails.cshtml" />
-    <Content Include="Views\UserMailer\_Layout.cshtml" />
-    <Content Include="Views\UserMailer\Welcome.cshtml" />
-    <Content Include="Views\UserMailer\PasswordReset.cshtml" />
     <Content Include="Views\Home\MailingList.cshtml" />
+    <Content Include="Views\Email\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

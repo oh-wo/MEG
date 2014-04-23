@@ -11,18 +11,30 @@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery-ui-1.8.24.min.js"></script>
     <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-44467049-1', 'mechanical-engineering-group.org.nz');
+        ga('send', 'pageview');
+
+    </script>
+    <script>
         $(document).on('click', '#megLogo', function () {
             window.location = "/Home/Index"
         });
         $(document).on('click', '#createArticle', function () {
-            var articleTitle; 
+            var articleTitle;
             if ((articleTitle=prompt('Please enter a title for your new article'))) {
                 //create the article - set it up with a guid
                 $('<input type="hidden" name="Title" value="'+articleTitle+'">').appendTo("#createArticleForm");
                 $('#createArticleForm').submit();
             } else {
                 //dont create the article
-                
+
             }
         });
         $(document).on('click', '#viewApplicants', function () {
@@ -37,51 +49,60 @@
         $(document).on('click', '#logout', function () {
             window.location = "/Account/Logoff"
         });
-        
+
     </script>
 </head>
 <body>
     <header>
-       <div class="content-wrapper"> 
-    @if (User.Identity.IsAuthenticated)
-    {
-        
-        <div style="float:right;">Hi @MEG.Helpers.AuthenticationHelper.GetUser(new Guid(User.Identity.Name)).Email</div>
-        <div style="float:right;clear:right;">
-            <form id="createArticleForm" action="/Home/CreateArticle" method="post">
-                <input id="createArticle" type="button" value="create article" />
-            </form>
-            <input id="viewApplicants" type="button" value="applicants"/>
-            <input id="viewMailing" type="button" value="mailing list"/>
-            <input id="viewReservations" type="button" value="reservations"/>
-            <input id="logout" type="button" value="logout"/>
-            </div>
-    }
+        <div class="content-wrapper">
+            @if (User.Identity.IsAuthenticated)
+            {
+
+                <div style="float:right;">Hi @MEG.Helpers.AuthenticationHelper.GetUser(new Guid(User.Identity.Name)).Email</div>
+                <div style="float:right;clear:right;">
+                    <form id="createArticleForm" action="/Home/CreateArticle" method="post">
+                        <input id="createArticle" type="button" value="create article" />
+                    </form>
+                    <input id="viewApplicants" type="button" value="applicants" />
+                    <input id="viewMailing" type="button" value="mailing list" />
+                    <input id="viewReservations" type="button" value="reservations" />
+                    <input id="logout" type="button" value="logout" />
+                </div>
+            }
             <img src="/Content/MEGLogo-RGB%20small.jpg" id="megLogo">
             <table id="nav" cellpadding="0" cellspacing="0">
                 <tbody>
-                <tr>
-                    <td><a href="/Home/Upcoming" title="Filter by upcoming events">Upcoming Events</a></td>
-                    <td><a href="/Home/Past" title="Filter by past events">Past Events</a></td>
-                    <td><a href="/Home/Register" title="Register yourself as a MEG member">Register</a></td>
-                    <td><a href="/Home/About" title="Find out about the group">About</a></td>
-                    <td><a href="/Home/Contact" title="MEG contacts">Contact</a></td>
-                </tr>
-                    </tbody>
+                    <tr>
+                        <td><a href="/Home/Upcoming" title="Filter by upcoming events">Upcoming Events</a></td>
+                        <td><a href="/Home/Past" title="Filter by past events">Past Events</a></td>
+                        <td><a href="/Home/Register" title="Register yourself as a MEG member">Register</a></td>
+                        <td><a href="/Home/About" title="Find out about the group">About</a></td>
+                        <td><a href="/Home/Contact" title="MEG contacts">Contact</a></td>
+                    </tr>
+                </tbody>
             </table>
-           </div>
+        </div>
     </header>
     @RenderBody()
+    
+    <!---asdasd-->
     <footer>
         <div class="content-wrapper">
-            <div class="float-left" style="width:100%;">
-                 @if (!User.Identity.IsAuthenticated)
-    {
+            @if (!User.Identity.IsAuthenticated)
+            {
                 <div id="boardMenu" style="float:left; margin-top:20px; font-size:12px; line-height:170%;">BOARD MEMBERS<br><a href="/Account/Logon">Log On</a><br><a href="/Account/Register">Register</a></div>
-                 }
-                     <div id="associatedLinks" style="float:right;"><img src="/Content/CallaghanInnovation.png" style="width: 400px; float: left; margin-top: 20px;"><img src="/Content/ImecheLogo.png" style="height:126px; width:400px;"></div>
-                
+            }
+            <div id="associatedLinks" style="float:right;">
+                <a href="http://www.callaghaninnovation.govt.nz/">
+                    <img src="/Content/CallaghanInnovation.png" style="width: 400px; float: left; margin-top: 20px;">
+                </a>
+                <a href="http://www.imeche.org/">
+                    <img src="/Content/ImecheLogo.png" style="height:126px; width:400px;">
+                </a>
+                <a href="http://www.ipenz.org.nz/"><div class="IPENZ-logo"></div></a>
+                <a href="http://www.fsae.co.nz/"><div class="FSAE-logo"></div></a>
             </div>
+
         </div>
     </footer>
 </body>

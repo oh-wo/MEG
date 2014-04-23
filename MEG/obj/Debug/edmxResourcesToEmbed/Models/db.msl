@@ -27,6 +27,7 @@
     <EntitySetMapping Name="Events">
       <EntityTypeMapping TypeName="MegDatabaseModel.Event">
         <MappingFragment StoreEntitySet="Event">
+          <ScalarProperty Name="TitleType" ColumnName="TitleType" />
           <ScalarProperty Name="Active" ColumnName="Active" />
           <ScalarProperty Name="ReminderSent" ColumnName="ReminderSent" />
           <ScalarProperty Name="ReminderSendDate" ColumnName="ReminderSendDate" />

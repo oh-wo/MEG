@@ -34,3 +34,41 @@ c:\users\owen\documents\visual studio 2012\Projects\MEG\MEG\obj\Debug\MEG.csproj
 c:\users\owen\documents\visual studio 2012\Projects\MEG\MEG\obj\Debug\MEG.dll
 c:\users\owen\documents\visual studio 2012\Projects\MEG\MEG\obj\Debug\MEG.pdb
 C:\Users\Owen\Documents\Visual Studio 2012\Projects\MEG\MEG\bin\Mvc.Mailer.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\MEG.dll.config
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\MEG.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\MEG.pdb
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\Antlr3.Runtime.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\EntityFramework.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\Mvc.Mailer.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\Newtonsoft.Json.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Net.Http.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Net.Http.Formatting.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Net.Http.WebRequest.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Http.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Http.WebHost.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Mvc.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Optimization.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Providers.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Razor.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.WebPages.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.WebPages.Razor.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\WebGrease.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\EntityFramework.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\Newtonsoft.Json.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Net.Http.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Net.Http.Formatting.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Net.Http.WebRequest.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Http.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Http.WebHost.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Mvc.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.Razor.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.WebPages.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\System.Web.WebPages.Razor.xml
+C:\Users\Owen\Documents\GitHub\MEG\MEG\obj\Debug\MEG.csprojResolveAssemblyReference.cache
+C:\Users\Owen\Documents\GitHub\MEG\MEG\obj\Debug\MEG.dll
+C:\Users\Owen\Documents\GitHub\MEG\MEG\obj\Debug\MEG.pdb
+C:\Users\Owen\Documents\GitHub\MEG\MEG\bin\Elmah.dll

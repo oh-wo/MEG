@@ -181,10 +181,10 @@ table[articleID] a:hover {
     border: solid 5px #000;
     position: absolute;
     top: 115px;
-    left: 550px;
     height: 300px;
     width: 500px;
-    cursor:default;
+    cursor: default;
+    position: absolute;
 }
 
     .rsvpContainer div {
@@ -207,6 +207,7 @@ table[articleID] a:hover {
     margin-top: 10px;
     width: 100%;
 }
+
 .completeRsvp {
     float: left;
     margin: auto 0;
@@ -214,16 +215,17 @@ table[articleID] a:hover {
     margin-top: 10px;
     color: #006699;
 }
+
 .rsvpCloseWindow {
     cursor: pointer;
     background-color: #fff;
     border: solid 5px #000;
-    
     margin-right: -30px;
     width: 40px;
     height: 40px;
     margin-top: -30px;
 }
+
 .rsvpCloseImage {
     height: 25px;
     width: 25px;
@@ -338,23 +340,35 @@ h5, h6 {
 }
 
 #body {
-    background-color: #fff;
-    clear: both;
-    padding-bottom: 35px;
-    margin: 0 auto;
-    max-width: 960px;
-    padding: 0;
+background-color: #fff;
+clear: both;
+margin: 0 auto;
+max-width: 960px;
+float: left;
+padding: 0;
+margin-left: 25%;
+padding-left: 5%;
+padding-bottom: 5%;
 }
 
 header .content-wrapper {
     padding-top: 0;
 }
 
+.none-found {
+    float: left;
+    clear: both;
+    width: 100%;
+    text-align: center;
+    margin-top: 10%;
+    margin-bottom: 10%;
+    font-style: italic;
+}
+
 footer {
     clear: both;
     background-color: #e2e2e2;
     font-size: .8em;
-    height: 100px;
     margin-top: 50px;
 }
 
@@ -649,11 +663,30 @@ tr.pager td {
 
     footer {
         text-align: center;
-        height: auto;
         padding: 10px 0;
     }
 
         footer p {
             margin: 0;
         }
+}
+
+.IPENZ-logo {
+    float: left;
+    clear: left;
+    width: 50%;
+    background-image: url('/Content/IPENZLogo-REVERSED.png');
+    padding-bottom: 10%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #0065A4;
+}
+
+.FSAE-logo {
+    float: left;
+    background-image: url('/Content/fsae-logo.png');
+    width: 48%;
+    padding-bottom: 10%;
+    background-repeat: no-repeat;
+    margin-left: 2%;
 }

@@ -1,8 +1,16 @@
-﻿$(document).on('click', '.e-rsvp', function (e) {
+﻿//for index pages
+$(document).on('click', '.e-rsvp', function (e) {
     e.stopPropagation();
     var articleID = $(this).closest('.e-container').attr('articleID');
     $('<div id="cover" style="top:'+posTop()+'px;"></div>').appendTo('body');
-    $(this).closest('.e-container').find('.rsvpContainer').css('top', ((posTop() + 115) + 'px')).fadeIn(200);
+    $(this).closest('.e-container').find('.rsvpContainer').offset({ top: (posTop() + ($(window).height() - $($('.rsvpContainer')[0]).height()) / 3), left: ($(window).width() - $($('.rsvpContainer')[0]).width()) / 2 }).fadeIn(200);
+    $('.rsvpContainer:visible').offset({ top: 100, left: ($(window).width() - $($('.rsvpContainer')[0]).width()) / 2 });
+    $('body').css('overflow', 'hidden');
+});
+//article page
+$(document).on('click', '#rsvp', function (e) {
+    $('.rsvpContainer').css('top', ((posTop() + ($(window).height() - $($('.rsvpContainer')[0]).height()) / 3) + 'px')).css('left', ($(window).width() - $($('.rsvpContainer')[0]).width()) / 2).fadeIn(200);
+    $('<div id="cover" style="top:' + posTop() + 'px;"></div>').appendTo('body');
     $('body').css('overflow', 'hidden');
 });
 
@@ -29,12 +37,20 @@ function posTop() {
         $(this).remove();
     });
     $('body').css('overflow', 'auto');
-});
+    });
+    $(document).on('click', '.rsvpContainer', function (e) { e.stopPropagation();})
     function ReserveSeats(cont) {
         $(cont).find('.completeRsvp').val('Saving..');
         $(cont).find('input').attr('disabled', 'disabled');
+
+        var EventID = $(cont).closest('.e-container').attr('articleid');//for the index pages
+        if(EventID==undefined){
+            //For the article page
+            EventID=$('#articleContainer').attr('articleid');
+        }
+
     var data = {
-        EventID: $(cont).closest('.e-container').attr('articleid'),
+        EventID: EventID,
         Name: $(cont).find('.rsvpUserName').val(),
         Email:$(cont).find('.rsvpUserEmail').val(),
         NoSeats:parseInt($(cont).find('.rsvpNoSeats').val()),

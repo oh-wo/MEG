@@ -35,13 +35,13 @@
     });
 </script>
 
-<div class="content-wrapper" style="clear: both;">
+<div class="content-wrapper" style="clear: both; padding-bottom:5%">
     @{
         foreach (Event e in Model)
         {
             <div style="font-weight: bold; font-size: 25px; margin-top:20px;">@e.Title</div>
         <div>
-            <div style="float: left;"><span class="seatsRemaining" articleid="@e.ID">@(e.TotalSeats-e.SeatsTaken)</span>/@e.TotalSeats seats remaining</div>
+            <div style="float: left;"><span class="seatsRemaining" articleid="@e.ID">@(e.TotalSeats.GetValueOrDefault() - e.SeatsTaken.GetValueOrDefault())</span>/@e.TotalSeats seats remaining</div>
             <input style="float: right;" type="button" class="emailAll" articleid="@e.ID" articletitle="An upcoming event" value="Email all">
             <form method="post" action="/Home/Article">
                 <input name="articleID" value="@e.ID" type="hidden"><input style="float: right;" type="submit" class="editArticle" value="Edit Article"></form>

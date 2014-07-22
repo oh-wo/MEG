@@ -1,23 +1,30 @@
 ﻿@using MEG.Models;
 @model Event
-
+@{
+    double startTime = Model.StartTime ?? 18;
+    int startTimeHours = (int)Math.Floor((decimal)startTime);
+    int startTimeMins = (int)((startTime % startTimeHours) * 60);
+    double endTime = Model.EndTime ?? 20;
+    int endTimeHours = (int)Math.Floor((decimal)endTime);
+    int endTimeMins = (int)((endTime % endTimeHours) * 60);
+}
 <div class="rsvpContainer" style="display:none;">
     <div class="rsvpCloseWindow" style="float: right;">
-        <img src="/Content/black-cross-md.png" class="rsvpCloseImage" >
+        <img src="/Content/black-cross-md.png" class="rsvpCloseImage">
 
     </div>
     <div class="rsvpTitle">@Model.Title</div>
-<div class="rsvpTimeRange rsvpDetails">@Model.StartTime - @Model.EndTime</div>
+    <div class="rsvpTimeRange rsvpDetails">@Html.Raw(String.Format("{0} - {1}", new DateTime(2014, 01, 01, startTimeHours, startTimeMins, 0).ToShortTimeString(), new DateTime(2014, 01, 01, endTimeHours, endTimeMins, 0).ToShortTimeString()))</div>
     <div class="rsvpDate rsvpDetails">@Model.EventDate.GetValueOrDefault().ToLongDateString()</div>
     <div class="rsvpVenue rsvpDetails">@{String.Format("{0}{1}{2}{3}", String.Concat(Model.Venue1, ", "), String.Concat(Model.Venue2, ", "), String.Concat(Model.Venue3, ", "), Model.Venue4);}</div>
     <div class="rsvpName rsvpInput">
         <div style="float: left; width: 140px; margin-right: 10px;">Name: </div>
-        <input style="float: left; color: #F33; border: #ccc solid 1px; " type="text" class="rsvpUserName"/>
+        <input style="float: left; color: #F33; border: #ccc solid 1px; " type="text" class="rsvpUserName" />
         <div class="userNameValidationError" style="margin-top: 5px; display: none; color: #f00; font-weight: normal; float: left; font-size: 13px;">Please enter your name</div>
     </div>
     <div class="rsvpEmail rsvpInput">
         <div style="float: left; width: 140px; margin-right: 10px;">Email: </div>
-        <input style="float: left; color: #F33; border: #ccc solid 1px;" type="text" class="rsvpUserEmail"/>
+        <input style="float: left; color: #F33; border: #ccc solid 1px;" type="text" class="rsvpUserEmail" />
         <div class="userEmailValidationError" style="margin-top: 5px; display: none; color: #f00; font-weight: normal; float: left; font-size: 13px;">Please enter your email</div>
     </div>
     <div class="rsvpSeats rsvpInput">
@@ -28,7 +35,8 @@
             <option value="3">three</option>
             <option value="4">four</option>
             <option value="5">five</option>
-        </select></div>
+        </select>
+    </div>
     <div class="rsvpMembership rsvpInput">
         <div style="float: left; width: 140px; margin-right: 10px;">Your membership:</div>
         <table class="userMembership" style="width: 300px; color: #F33;">
@@ -37,16 +45,24 @@
                     <td>MEG</td>
                     <td>IPENZ</td>
                     <td>IMechE</td>
+                    <td>None</td>
                 </tr>
                 <tr>
                     <td>
-                        <input class="MegMember" type="checkbox"></td>
+                        <input class="MegMember" type="checkbox">
+                    </td>
                     <td>
-                        <input class="IpenzMember" type="checkbox"></td>
+                        <input class="IpenzMember" type="checkbox">
+                    </td>
                     <td>
-                        <input class="ImecheMember" type="checkbox"></td>
+                        <input class="ImecheMember" type="checkbox">
+                    </td>
+                    <td>
+                        <input class="notAMember" type="checkbox">
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <input class="completeRsvp" type="button" value="RSVP"></div>
+    <input class="completeRsvp" type="button" value="RSVP">
+</div>

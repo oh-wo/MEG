@@ -1,0 +1,59 @@
+﻿@using MEG.Models;
+@model Reservation
+@{
+    Layout = null;
+}
+<table style="width: 75%; margin-left:12.5%; font-family: 'Segoe UI', Verdana, Helvetica, sans-serif; ">
+    <tr>
+        <td style="text-align: left; font-size: 2em; padding-bottom: 35px; ">MEG Reservation: @Model.Event.Title</td>
+    </tr>
+    <tr>
+        <td style="padding-bottom: 50px; font-size: 1em; text-align: justify;">Hi @Model.Name, <br />Thanks so much for registering to attend the @Model.Event.Title event. <br />You reserved @Model.NoSeats seats.</td>
+    </tr>
+    <tr>
+        <td>
+            <table style="font-family: 'Segoe UI', Verdana, Helvetica, sans-serif; width: 100%; margin-bottom: 50px;" border="0" cellpadding="0" cellspacing="0">
+                <thead style="font-weight: bold; background-color: #f33;">
+                    <tr>
+                        <td style="padding-left:5px">Presenter</td>
+                        <td style="padding-left:5px">Date</td>
+                        <td style="padding-left:5px">Time</td>
+                        <td style="padding-left:5px">Venue</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding-left:5px">
+                            @Model.Event.Presenter
+                        </td>
+                        <td style="padding-left:5px">
+                            @Model.Event.EventDate.Value.ToShortDateString()
+                        </td>
+                        <td style="padding-left:5px">
+                            @{double startTime = Model.Event.StartTime ?? 18;
+                            int startTimeHours = (int)Math.Floor((decimal)startTime);
+                            int startTimeMins = (int)((startTime % startTimeHours) * 60);
+                            double endTime = Model.Event.EndTime ?? 20;
+                            int endTimeHours = (int)Math.Floor((decimal)endTime);
+                            int endTimeMins = (int)((endTime % endTimeHours) * 60);
+
+                            }
+                            @Html.Raw(String.Format("{0} - {1}", new DateTime(2014, 01, 01, startTimeHours, startTimeMins, 0).ToShortTimeString(), new DateTime(2014, 01, 01, endTimeHours, endTimeMins, 0).ToShortTimeString()))
+                        </td>
+                        <td style="padding-left:5px">
+                            @Model.Event.Venue1<br />@Model.Event.Venue2<br />@Model.Event.Venue3<br />@Model.Event.Venue4
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr><td>
+            <img style="width:100%" src="@String.Concat("http://mechanical-engineering-group.org.nz/Content/Uploads/", Model.Event.ID, Model.Event.ImageExtension)" /></td></tr>
+    <tr>
+        <td style="text-align:justify; width:100%;">@Model.Event.Body</td>
+
+    </tr>
+
+
+</table>

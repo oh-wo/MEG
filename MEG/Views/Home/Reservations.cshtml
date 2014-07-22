@@ -2,98 +2,136 @@
 @model List<Event>
 <script>
     $(document).on('click', '.cancelReservation', function (e) {
-        $(this).css('cursor', 'default').css('text-decoration', 'none').css('color', '#ccc');
-        var eventID = $(this).closest('table').attr('articleid');
-        var data = {
-            EventID: eventID,
-            ReservationID : $(this).attr('reservationid'),
-        };
-        var $tr = $(this).closest('tr');
-        var dataToPost = JSON.stringify(data);
+        if (confirm('Delete reservation?')) {
 
-        $.ajax({
-            type: "POST",
-            url: "/Home/DeleteReservation",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: dataToPost,
-            success: function (a) {
-                if (a) {
-                    $('span[articleid="' + eventID + '"].seatsRemaining').text(parseInt($('span[articleid="' + eventID + '"].seatsRemaining').text()) + parseInt($($tr.children('td')[2]).text()));
-                    $tr.fadeOut('400', function (e) {
-                        $tr.remove();
-                    });
-                } else {
-                    alert("Server error");
-                    $(this).css('cursor', 'pointer').css('color', '#000');
-                }
-            },
-            error: function (ex) {
-                alert("Communication error");
-            },
-        });
+            $(this).css('cursor', 'default').css('text-decoration', 'none').css('color', '#ccc');
+            var eventID = $(this).closest('table').attr('articleid');
+            var data = {
+                EventID: eventID,
+                ReservationID: $(this).attr('reservationid'),
+            };
+            var $tr = $(this).closest('tr');
+            var dataToPost = JSON.stringify(data);
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/DeleteReservation",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: dataToPost,
+                success: function (a) {
+                    if (a) {
+                        $('span[articleid="' + eventID + '"].seatsRemaining').text(parseInt($('span[articleid="' + eventID + '"].seatsRemaining').text()) + parseInt($($tr.children('td')[2]).text()));
+                        $tr.fadeOut('400', function (e) {
+                            $tr.remove();
+                        });
+                    } else {
+                        alert("Server error");
+                        $(this).css('cursor', 'pointer').css('color', '#000');
+                    }
+                },
+                error: function (ex) {
+                    alert("Communication error");
+                },
+            });
+        }
     });
-</script>
 
+    $(document).on('click', '.expandReservations', function (e) {
+        $(this).closest('.meg-event').find('.reservationContainer').slideToggle('fast');
+    })
+</script>
+<style>
+    div.reservationContainer {
+        width: 100%;
+        float: left;
+    }
+    .meg-event {
+        float: left;
+        clear: left;
+        width: 100%;
+        margin-bottom: 2%;
+        background-color: #ccc;
+        padding: 1%;
+        border-radius: 5px;
+    }
+</style>
 <div class="content-wrapper" style="clear: both; padding-bottom:5%">
     @{
-        foreach (Event e in Model)
-        {
-            <div style="font-weight: bold; font-size: 25px; margin-top:20px;">@e.Title</div>
-        <div>
-            <div style="float: left;"><span class="seatsRemaining" articleid="@e.ID">@(e.TotalSeats.GetValueOrDefault() - e.SeatsTaken.GetValueOrDefault())</span>/@e.TotalSeats seats remaining</div>
-            <input style="float: right;" type="button" class="emailAll" articleid="@e.ID" articletitle="An upcoming event" value="Email all">
-            <form method="post" action="/Home/Article">
-                <input name="articleID" value="@e.ID" type="hidden"><input style="float: right;" type="submit" class="editArticle" value="Edit Article"></form>
-        </div>
-        
-        <table style="width:100%; border-bottom:solid 1px #8ebed7;" articleid="@e.ID">
-            <thead style="background-color: #8ebed7; text-align: center;">
-                <tr>
-                    <td rowspan="2">Name</td>
-                    <td rowspan="2">Email</td>
-                    <td rowspan="2">No. Seats</td>
-                    <td colspan="3">Membership</td>
-                    <td rowspan="2">TimeStamp</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>MEG</td>
-                    <td>IPENZ</td>
-                    <td>IMECHE</td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody style="text-align: center;">
+    foreach (Event e in Model.OrderByDescending(m=>m.Created))
+    {
+        @{int SeatsRemaining = (e.TotalSeats.GetValueOrDefault() - e.SeatsTaken.GetValueOrDefault());
+          SeatsRemaining = SeatsRemaining > 0 ? SeatsRemaining : 0;
+          }
+        <div class="meg-event">
+            <div style="font-weight: bold; font-size: 25px; margin-top:20px;"> @e.Title</div>
+            <div>
+                <div style="float: left;"><span class="eventDate">@e.EventDate.Value.ToLongDateString() </span> <br /><span class="seatsRemaining" articleid="@e.ID">@SeatsRemaining</span>/@e.TotalSeats seats remaining</div>
+                <input type="button" style="float:right" class="downloadReservations" value="Download as Excel" onclick="window.location.href = '/Home/ReservationsAsExcel?EventID=@e.ID'"/>
+                <input type="button" style="float:right" class="expandReservations" value="View Reservations" />
+                <input style="float: right;" type="button" class="emailAll" articleid="@e.ID" articletitle="An upcoming event" value="Email all">
+                <form method="post" action="/Home/Article">
+                    <input name="articleID" value="@e.ID" type="hidden"><input style="float: right;" type="submit" class="editArticle" value="Edit Article">
+                </form>
+            </div>
+            <div class="reservationContainer" hidden="hidden">
+                <table style="width:100%; border-bottom:solid 1px #8ebed7;" articleid="@e.ID">
+                    <thead style="background-color: #8ebed7; text-align: center;">
+                        <tr>
+                            <td rowspan="2">Name</td>
+                            <td rowspan="2">Email</td>
+                            <td rowspan="2">No. Seats</td>
+                            <td colspan="3">Membership</td>
+                            <td rowspan="2">TimeStamp</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>MEG</td>
+                            <td>IPENZ</td>
+                            <td>IMECHE</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                        @if (e.Reservations.Count == 0)
+                        {
+                            <tr><td colspan="8">No reservations yet.</td></tr>
+                        }
+                        @foreach (Reservation r in e.Reservations.OrderBy(r => r.Name))
+                        {
 
-                @foreach (Reservation r in e.Reservations.OrderBy(r=>r.Name))
-                {
-            
-        
-                    <tr>
-                        <td>@r.Name</td>
-                        <td articleid="@e.ID" emailcell=""><a href="mailto:@r.Email">@r.Email</a></td>
-                        <td>@r.NoSeats</td>
-                        <td>@if (r.MemberMeg??false)
-                            {
-                                <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
-                            }
-                        </td>
-                        <td>@if (r.MemberIpenz??false)
-                            {
-                                <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
-                            }</td>
-                        <td>@if (r.MemberImeche??false)
-                            {
-                                <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
-                            }</td>
-                        <td>4/4/2013 3:49:11 AM</td>
-                        <td class="cancelReservation" style="cursor: pointer; text-decoration: underline;" reservationid="@r.ID">cancel</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    
-        }    
+
+                            <tr>
+                                <td>@r.Name</td>
+                                <td articleid="@e.ID" emailcell=""><a href="mailto:@r.Email">@r.Email</a></td>
+                                <td>@r.NoSeats</td>
+                                <td>
+                                    @if (r.MemberMeg ?? false)
+                                    {
+                                        <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
+                                    }
+                                </td>
+                                <td>
+                                    @if (r.MemberIpenz ?? false)
+                                    {
+                                        <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
+                                    }
+                                </td>
+                                <td>
+                                    @if (r.MemberImeche ?? false)
+                                    {
+                                        <img src="/Content/black-check-mark-md.png" height="10px" width="10px">
+                                    }
+                                </td>
+                                <td>4/4/2013 3:49:11 AM</td>
+                                <td class="cancelReservation" style="cursor: pointer; text-decoration: underline;" reservationid="@r.ID">cancel</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
     }
+}
 </div>

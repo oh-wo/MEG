@@ -4,8 +4,106 @@
 
 @{
     ViewBag.Title = Title;
+    int SeatsRemaining = (Model.TotalSeats.GetValueOrDefault() - Model.SeatsTaken.GetValueOrDefault());
+
+    //SeatsRemaining = SeatsRemaining < 0 ? (SeatsRemaining + e.FakeSeats.GetValueOrDefault()) : SeatsRemaining;
+    if (User.Identity.IsAuthenticated)
+    {
+        //show the real number if you're authenticated
+    }
+    else
+    {
+        //only apply the placeholder seats if there are enough remaining - otherwise remove them
+        SeatsRemaining = (SeatsRemaining - Model.FakeSeats.GetValueOrDefault()) > 10 ? (SeatsRemaining - Model.FakeSeats.GetValueOrDefault()) : SeatsRemaining;
+        //no matter what we need to show at least 0 seats
+        SeatsRemaining = SeatsRemaining > 0 ? SeatsRemaining : 0;
+    }
 }
+
+
+
+
 <style>
+    /*REPORT STUFF*/
+    textarea#reportBody {
+        float: left;
+        clear: left;
+        width: 98.5%;
+        padding: 1%;
+        margin-top: 1%;
+        margin-bottom: 19%;
+        font-size: inherit;
+        font-style: inherit;
+        font-family: inherit;
+        resize: none;
+        height: 500px;
+    }
+
+    .pictureContainer {
+        width: 100%;
+        float: left;
+        clear: left;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        overflow-y: hidden;
+        overflow-x: scroll;
+        height: 200px !important;
+        white-space: nowrap;
+    }
+    .imgContainer {
+        height: 100% !important;
+        width: 23%;
+        margin-right: 2%;
+        display: inline-block;
+        margin-bottom: 0;
+        position: relative;
+    }
+        .imgContainer .removeImage{
+            display:none;
+        } 
+        .imgContainer:hover .removeImage {
+            position: absolute;
+            top: 2%;
+            right: 2%;
+            background-color: #f00;
+            padding: 1% 3% 2% 3%;
+            border: transparent;
+            border-radius: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            display:block;
+        }
+        .pictureContainer img {
+            height: 100%;
+            width: 100%;
+        }
+    div#uploadReportImageContainer {
+        float: left;
+        clear: left;
+        background-color: rgba(0, 0, 0, 0.71);
+        color: #fff;
+        width: 100%;
+        padding: 0.5%;
+    }
+
+    #uploadReportImageContainer form {
+        float: left;
+    }
+    
+
+    /*ARTICLE STUFF */
+    #FakeSeats {
+        float: left;
+        width: 30px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .fakeSeatsHelpText {
+        float: left;
+        margin-left: 2px;
+        margin-top: 3px;
+        font-size: 15px;
+    }
     #cover {
         width: 100%;
         height: 100%;
@@ -245,7 +343,7 @@
     }
 </script>
 
-    <script>
+<script>
         $(document).ready(function () {
             //Article main controls
             $(document).on('click', '#deleteArticle', function () {
@@ -443,11 +541,40 @@
             time.meridian = Math.floor(time.totalHours) >= 12 ? 'pm' : 'am';
             return (time.hours + ':' + time.minutes + time.meridian);
         }
+        $(document).on('click','.removeImage', function (e) {
+            if (confirm('Are you sure you want to delete this picture?')) {
+                var $imgContainer = $(this).closest('.imgContainer');
+                var $img = $(this).closest('.imgContainer').find('img');
+                var picID = $imgContainer.attr('id');
 
-    </script>
-    @if (!User.Identity.IsAuthenticated)
-    {
-        <script>
+                $(this).hide();//prevent them from doing it again
+                $img.css('opacity', 0.5);//feedback from the user
+
+                var data = {
+                    ID: picID,
+                };
+                var dataToPost = JSON.stringify(data);
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/RemoveReportImage",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: dataToPost,
+                    success: function (a) {
+                        $imgContainer.fadeOut('slow', function () {
+                            $(this).remove();
+                        })
+                    },
+                    error: function (ex) {
+                    },
+                });
+
+            }
+        })
+</script>
+@if (!User.Identity.IsAuthenticated)
+{
+    <script>
             $(document).ready(function () {
                 var startTime = $('#StartTime').val();
                 var endTime = $('#EndTime').val();
@@ -458,34 +585,116 @@
             });
 
 
-        </script>
-    }
-    else
-    {
-        <script>
-            $(document).on('change', '.e-active', function (e) {
-                var data = {
-                    eID: $('#articleContainer').attr('articleid'),
-                    state: $(this).attr('checked') == 'checked',
-                };
-                var dataToPost = JSON.stringify(data);
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/ChangeEventActivity",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: dataToPost,
-                    success: function (a) {
-                        console.log(a);
-                    },
-                    error: function (ex) {
-                    },
-                });
+    </script>
+}
+else
+{
+    <script>
+        $(document).on('change', '.e-active', function (e) {
+            var data = {
+                eID: $('#articleContainer').attr('articleid'),
+                state: $(this).attr('checked') == 'checked',
+            };
+            var dataToPost = JSON.stringify(data);
+            $.ajax({
+                type: "POST",
+                url: "/Home/ChangeEventActivity",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: dataToPost,
+                success: function (a) {
+                    console.log(a);
+                },
+                error: function (ex) {
+                },
             });
-            function handleFileSelect(evt) {
-                $('<div id="body-image-uploading" style="margin-top:30px;">Uploading your image...</div>').appendTo('#body-image-uploadbox');
+        });
+        function handleFileSelect(evt) {
+            $('<div id="body-image-uploading" style="margin-top:30px;">Uploading your image...</div>').appendTo('#body-image-uploadbox');
 
-                file = evt.target.files[0];
+            file = evt.target.files[0];
+            if (file.type.match('image.*')) {
+                if (window.FileReader) {
+                    reader = new FileReader();
+                    reader.onloadend = function (e) {
+                        //showUploadedItem(e.target.result, file.fileName);
+                    };
+                    reader.readAsDataURL(file);
+                }
+                formdata = new FormData();
+                if (formdata) {
+                    formdata.append("default_export_filename", file);
+                    formdata.append("filename", $('#articleContainer').attr('articleid'));
+                }
+                if (formdata) {
+                    $.ajax({
+                        url: '/Home/UploadImage',
+                        type: "POST",
+                        data: formdata,
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            if (res.success) {
+                                $('#body-image-placeholder').remove();
+                                $('#body-image').attr('src', '/Content/Uploads/' + res.url);
+
+                            } else {
+                                //server error
+
+                            }
+                            $('#body-image-uploading').remove();
+                        },
+                        error: function (e) {
+                            $('#body-image-uploading').remove();
+
+                        }
+                    });
+                }
+            }
+
+        }
+        $(document).on('mouseenter', '#body-image-container', function () {
+            $('#body-image-uploadbox').fadeIn(200);
+        });
+        $(document).on('mouseleave', '#body-image-container', function () {
+            $('#body-image-uploadbox').fadeOut(200);
+        });
+        $(document).on('change', '#files', function (e) { handleFileSelect(e); });
+        function Saving(state) {
+            if ($('#savingMessage').length == 0) {
+                var string = '';
+                switch (state) {
+                    case 0: string = 'saved';
+                        break;
+                    case 1: string = 'saving error';
+                        break;
+                    case 2: string = 'server error';
+                        break;
+                }
+                if (string != '') {
+                    $('<div id="savingMessage" hidden="hidden" style="top:' + (posTop() + 20) + 'px;">' + string + '</div>').appendTo('body');
+
+                    $('#savingMessage').fadeIn(300, function () {
+                        setTimeout(function () { $('#savingMessage').fadeOut('slow', function () { $('#savingMessage').remove(); }); }, 1000);
+                    });
+                } else {
+                    //Dont know how to handle this kind of input
+                }
+            } else {
+                //already have displayed a message
+            }
+        }
+        function posTop() {
+            return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
+        }
+
+        
+        //UPLOAD REPORT IMAGES
+        $(document).on('change', '#files', function (e) { handleReportFileSelect(e); });
+        function handleReportFileSelect(evt) {
+            $('<div id="body-image-uploading" style="margin-top:30px;">Uploading your image...</div>').appendTo('#uploadReportImageContainer');
+            formdata = new FormData();
+            $(evt.target.files).each(function(i,file){
                 if (file.type.match('image.*')) {
                     if (window.FileReader) {
                         reader = new FileReader();
@@ -494,165 +703,177 @@
                         };
                         reader.readAsDataURL(file);
                     }
-                    formdata = new FormData();
+                
                     if (formdata) {
                         formdata.append("default_export_filename", file);
                         formdata.append("filename", $('#articleContainer').attr('articleid'));
                     }
-                    if (formdata) {
-                        $.ajax({
-                            url: '/Home/UploadImage',
-                            type: "POST",
-                            data: formdata,
-                            processData: false,
-                            contentType: false,
-                            success: function (res) {
-                                if (res.success) {
-                                    $('#body-image-placeholder').remove();
-                                    $('#body-image').attr('src', '/Content/Uploads/' + res.url);
+                }
+            })
+                if (formdata) {
+                    $.ajax({
+                        url: '/Home/UploadReportImage',
+                        type: "POST",
+                        data: formdata,
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            $(res).each(function(i,ils){
+                                if (ils.success) {
+                                    //   $('#body-image-placeholder').remove();
+                                    $('<div id=' + ils.url + ' class="imgContainer"><div class="removeImage">x</div><img src="' + '/Content/Uploads/' + ils.url + '"></div>').prependTo('.pictureContainer');
 
                                 } else {
                                     //server error
 
                                 }
-                                $('#body-image-uploading').remove();
-                            },
-                            error: function (e) {
-                                $('#body-image-uploading').remove();
+                            });
+                            //$('#body-image-uploading').remove();
+                        },
+                        error: function (e) {
+                            //$('#body-image-uploading').remove();
 
-                            }
-                        });
-                    }
-                }
-
-            }
-            $(document).on('mouseenter', '#body-image-container', function () {
-                $('#body-image-uploadbox').fadeIn(200);
-            });
-            $(document).on('mouseleave', '#body-image-container', function () {
-                $('#body-image-uploadbox').fadeOut(200);
-            });
-            $(document).on('change', '#files', function (e) { handleFileSelect(e); });
-            function Saving(state) {
-                if ($('#savingMessage').length == 0) {
-                    var string = '';
-                    switch (state) {
-                        case 0: string = 'saved';
-                            break;
-                        case 1: string = 'saving error';
-                            break;
-                        case 2: string = 'server error';
-                            break;
-                    }
-                    if (string != '') {
-                        $('<div id="savingMessage" hidden="hidden" style="top:' + (posTop() + 20) + 'px;">' + string + '</div>').appendTo('body');
-
-                        $('#savingMessage').fadeIn(300, function () {
-                            setTimeout(function () { $('#savingMessage').fadeOut('slow', function () { $('#savingMessage').remove(); }); }, 1000);
-                        });
-                    } else {
-                        //Dont know how to handle this kind of input
-                    }
-                } else {
-                    //already have displayed a message
+                        }
+                    });
                 }
             }
-            function posTop() {
-                return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
-            }
-        </script>
-    }
+    </script>
+}
 
-    <div class="content-wrapper">
+<div class="content-wrapper">
 
 
-        <output id="list"><span id="uploadedImage"></span></output>
-        <div id="articleContainer" articleid="@Model.ID">
+    <output id="list"><span id="uploadedImage"></span></output>
+
+    <div id="articleContainer" articleid="@Model.ID">
+        @if (User.Identity.IsAuthenticated)
+        {
+            @Html.Raw("<input type=\"button\" value=\"delete\" id=\"deleteArticle\" title=\"This is will permanently delete the article and any associated data such as rsvp records.\" style=\"float:left; margin-bottom:10px;\"/>");
+
+            <div class="e-active-container" title="Active articles are visible to the public">
+                <input type="checkbox" class="e-active" name="e-active"
+                       @if (Model.Active ?? false) { @Html.Raw("checked=\"checked\"")    ; } />
+                <label for="e-active">Active</label>
+            </div>
+        }
+        <input type="text" id="Title" title="Event Title" value="@Title"
+               @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")   ; } />
+        <div id="title-date" title="Month of event">@Html.Raw(Model.EventDate == null ? DateTime.UtcNow.AddDays(30).ToString("MMMM") : Model.EventDate.Value.ToString("MMMM"))</div>
+        <input type="text" id="title-type" title="Event type" value="@Model.TitleType" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")    } } />
+      
+        @{//ONLY NEED TO SHOW THIS STUFF IF IT's AN UP AND COMING ARTICLE.. OTHERWISE WE NEED TO SHOW THE REPORT
+            if (Model.EventDate.GetValueOrDefault().AddDays(7) > DateTime.UtcNow) { 
+        
+        
+          <div id="seats">
+
+            <div id="seats-remaining" title="Number of seats which remain available" type="text">@SeatsRemaining</div>
+            <div style="float: left; margin-top: 4px; font-size: 14px;">
+                /
+            </div>
+            <input id="TotalSeats" title="Total number of seats for this event" type="text" value="@Model.TotalSeats" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")   ; } maxlength="3" /><div style="float: left; margin-top: 2px; font-size: 15px;">
+                seats remaining
+            </div>
             @if (User.Identity.IsAuthenticated)
             {
-                @Html.Raw("<input type=\"button\" value=\"delete\" id=\"deleteArticle\" title=\"This is will permanently delete the article and any associated data such as rsvp records.\" style=\"float:left; margin-bottom:10px;\"/>");
-
-                <div class="e-active-container" title="Active articles are visible to the public">
-                    <input type="checkbox" class="e-active" name="e-active"
-                           @if (Model.Active ?? false) { @Html.Raw("checked=\"checked\"")   ; } />
-                    <label for="e-active">Active</label>
-                </div>
+                <div class="fakeSeatsHelpText">&</div>
+                <input type="text" id="FakeSeats" value="@Html.Raw(Model.FakeSeats.HasValue?Model.FakeSeats.Value:0)" maxlength="3" />
+                <div class="fakeSeatsHelpText">fake seats taken</div>
             }
-            <input type="text" id="Title" title="Event Title" value="@Title"
-                   @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")  ; } />
-            <div id="title-date" title="Month of event">@Html.Raw(Model.EventDate == null ? DateTime.UtcNow.AddDays(30).ToString("MMMM") : Model.EventDate.Value.ToString("MMMM"))</div>
-            <input type="text" id="title-type" title="Event type" value="@Model.TitleType" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")   } } />
-            <div id="seats">
-                <div id="seats-remaining" title="Number of seats which remain available" type="text">@(Model.TotalSeats.GetValueOrDefault() - Model.SeatsTaken.GetValueOrDefault())</div>
-                <div style="float: left; margin-top: 4px; font-size: 14px;">
-                    /
-                </div>
-                <input id="TotalSeats" title="Total number of seats for this event" type="text" value="@Model.TotalSeats" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")  ; } maxlength="3" /><div style="float: left; margin-top: 2px; font-size: 15px;">
-                    seats remaining
-                </div>
-            </div>
-            <div class="e-container">
-                <input id="rsvp" type="button" value="rsvp" @if (User.Identity.IsAuthenticated || Model.EventDate.Value < DateTime.Now) { @Html.Raw("disabled=\"disabled\"")  ; } else { //Cursory check to see if user has already rsvpd to this event 
-                                                                
-                                                                
-                                                                if (HttpContext.Current != null) { if (HttpContext.Current.Request.Cookies.AllKeys.Contains(Model.ID.ToString())) { if (HttpContext.Current.Request.Cookies[Model.ID.ToString()].Value == true.ToString()) { @Html.Raw("disabled=\"disabled\"")  ; @Html.Raw(" title=\"You've already rsvp'd to this event. Go to your emails to modify your reservation\"")  ; } else { @Html.Raw("title=\"Please RSVP to reserve a spot\"")  ; } } else {  }  } } />
-
-                <textarea id="Body" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")  ; }>
-                    @Model.Body
-                </textarea>
-
-                <div id="body-image-container">
-
-                    <img id="body-image" src="@String.Concat("/Content/Uploads/", Model.ID, Model.ImageExtension)" onerror="this.src='/Content/noimage.jpg';" />
-
-                    <div id="body-image-uploadbox" style="display:none;">
-                        <form enctype="multipart/form-data">
-                            <input type="file" id="files" name="files" accept="image/*" />
-
-                        </form>
-                    </div>
-                </div>
-
-                <div id="map_canvas" style="width: 30%; height: 300px; float: left; clear: both; margin-right: 20px; margin-bottom: 20px; margin-top: 10px;">
-                </div>
-
-                <table id="details">
-                    <thead>
-                        <tr>
-                            <td style="width: 100px;">Presenter</td>
-                            <td>Date</td>
-                            <td>Time</td>
-                            <td>Venue</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <input id="Presenter" title="Event presenter" type="text" value="@Model.Presenter" style="width:80px;" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")  ; } />
-                            </td>
-                            <td>
-                                <input id="InitialEventDateYear" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Year" />
-                                <input id="InitialEventDateMonth" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Month" />
-                                <input id="InitialEventDateDay" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Day" />
-                                <input id="EventDate" title="Event date" type="text" readonly="readonly" style="text-overflow:ellipsis;" />
-                            </td>
-                            <td>
-                                <input id="StartTime_totalHours" type="hidden" value="@(Model.StartTime == null ? 18 : Model.StartTime)" />
-                                <select id="StartTime" title="Start time" type="text" style="width:82px;" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")  ; }></select>
-                                -
-                                <input id="EndTime_totalHours" type="hidden" value="@(Model.EndTime == null ? 20 : Model.EndTime)" title="Event end time" />
-                                <select id="EndTime" title="End time" title="Event start time" type="text" style="width:82px;" @if (!User.Identity.IsAuthenticated) { Html.Raw("readonly=\"readonly\""); }></select>
-                            </td>
-                            <td>
-                                <input id="Venue01" class="venue" type="text" value="@Model.Venue1" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\" title=\"Venue\"")  ; } else { @Html.Raw("title=\"Venue line 1\"")  ; }>
-                                <input id="Venue02" class="venue" type="text" value="@Model.Venue2" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\" title=\"Venue\"")  ; } else { @Html.Raw("title=\"Venue line 2\"")  ; }>
-                                <input id="Venue03" class="venue" type="text" value="@Model.Venue3" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\" title=\"Venue\"")  ; } else { @Html.Raw("title=\"Venue line 3\"")  ; }>
-                                <input id="Venue04" class="venue" type="text" value="@Model.Venue4" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\" title=\"Venue\"")  ; } else { @Html.Raw("title=\"Venue line 4\"")  ; }>
-                        </tr>
-                    </tbody>
-                </table>
-                @Html.Partial("ReservationBox", Model)
-
-            </div>
         </div>
+        <div class="e-container">
+            <input id="rsvp" type="button" value="rsvp" @if (User.Identity.IsAuthenticated || Model.EventDate.Value < DateTime.Now) { @Html.Raw("disabled=\"disabled\"")  }
+                                                        else
+                                                        { //Cursory check to see if user has already rsvpd to this event   
+                                                            if ((HttpContext.Current != null
+                        && HttpContext.Current.Request.Cookies.AllKeys.Contains(Model.ID.ToString())
+                        && HttpContext.Current.Request.Cookies[Model.ID.ToString()].Value == true.ToString())
+                        || SeatsRemaining == 0)
+                                                            { @Html.Raw("disabled=\"disabled\"")   ; @Html.Raw(" title=\"You've already rsvp'd to this event. Go to your emails to modify your reservation\"")   ; } else { @Html.Raw("title=\"Please RSVP to reserve a spot\"")   ; } } else {  }  } } />
+
+            <textarea id="Body" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")   ; }>
+                @Model.Body
+            </textarea>
+
+            <div id="body-image-container">
+
+                <img id="body-image" src="@String.Concat("/Content/Uploads/", Model.ID, Model.ImageExtension)" onerror="this.src='/Content/noimage.jpg';" />
+
+                <div id="body-image-uploadbox" style="display:none;">
+                    <form enctype="multipart/form-data">
+                        <input type="file" id="files" name="files" accept="image/*" />
+
+                    </form>
+                </div>
+            </div>
+
+            <div id="map_canvas" style="width: 30%; height: 300px; float: left; clear: both; margin-right: 20px; margin-bottom: 20px; margin-top: 10px;">
+            </div>
+
+            <table id="details">
+                <thead>
+                    <tr>
+                        <td style="width: 100px;">Presenter</td>
+                        <td>Date</td>
+                        <td>Time</td>
+                        <td>Venue</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input id="Presenter" title="Event presenter" type="text" value="@Model.Presenter" style="width:80px;" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")   ; } />
+                        </td>
+                        <td>
+                            <input id="InitialEventDateYear" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Year" />
+                            <input id="InitialEventDateMonth" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Month" />
+                            <input id="InitialEventDateDay" type="hidden" value="@Model.EventDate.GetValueOrDefault(DateTime.UtcNow).Day" />
+                            <input id="EventDate" title="Event date" type="text" readonly="readonly" style="text-overflow:ellipsis;" />
+                        </td>
+                        <td>
+                            <input id="StartTime_totalHours" type="hidden" value="@(Model.StartTime == null ? 18 : Model.StartTime)" />
+                            <select id="StartTime" title="Start time" type="text" style="width:82px;" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")   ; }></select>
+                            -
+                            <input id="EndTime_totalHours" type="hidden" value="@(Model.EndTime == null ? 20 : Model.EndTime)" title="Event end time" />
+                            <select id="EndTime" title="End time" title="Event start time" type="text" style="width:82px;" @if (!User.Identity.IsAuthenticated) { Html.Raw("readonly=\"readonly\""); }></select>
+                        </td>
+                        <td>
+                            <input id="Venue01" class="venue" type="text" value="@Model.Venue1" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\" title=\"Venue\"")   ; } else { @Html.Raw("title=\"Venue line 1\"")   ; }>
+                            <input id="Venue02" class="venue" type="text" value="@Model.Venue2" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\" title=\"Venue\"")   ; } else { @Html.Raw("title=\"Venue line 2\"")   ; }>
+                            <input id="Venue03" class="venue" type="text" value="@Model.Venue3" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\" title=\"Venue\"")   ; } else { @Html.Raw("title=\"Venue line 3\"")   ; }>
+                            <input id="Venue04" class="venue" type="text" value="@Model.Venue4" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\" title=\"Venue\"")   ; } else { @Html.Raw("title=\"Venue line 4\"")   ; }>
+                    </tr>
+                </tbody>
+            </table>
+            @Html.Partial("ReservationBox", Model)
+
+        </div>
+
+
+            }
+            else
+            {
+                //SHOW THE REPORT
+                if (User.Identity.IsAuthenticated || Model.EventReportPics.Count>0) {
+                <div class="pictureContainer">
+                    @foreach (EventReportPic pic in Model.EventReportPics)
+                    {
+                        @Html.Raw(String.Format("<div id=\"{0}\" class=\"imgContainer\">{2}<img src=\"/Content/Uploads/{0}{1}\"/></div>",pic.ID,pic.ImageExtension,User.Identity.IsAuthenticated?"<div class=\"removeImage\">x</div>":""));
+                    }
+                </div>
+        }
+            if (User.Identity.IsAuthenticated) { 
+    <div id="uploadReportImageContainer">
+        <form enctype="multipart/form-data">
+            <input type="file" id="files" name="files" accept="image/*" multiple="multiple" />
+
+        </form>
+    </div>
+            }
+            
+                <textarea id="reportBody" @{if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")    ; }}>@Html.Raw(String.Format("{0}",Model.ReportText!=null?Model.ReportText:"We haven't uploaded a report yet - check back soon!"))</textarea>
+                
+            }
+}
+ </div>
 

@@ -9,6 +9,8 @@ using System.IO;
 using System.Data.Entity;
 using Mvc.Mailer;
 using MEG.Mailers;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace MEG.Controllers
 {
@@ -19,7 +21,7 @@ namespace MEG.Controllers
         public IUserMailer UserMailer
         {
             get { return _userMailer; }
-            set{_userMailer = value;}
+            set { _userMailer = value; }
         }
 
 
@@ -29,8 +31,9 @@ namespace MEG.Controllers
         public ActionResult Index()
         {
             List<Event> events = new List<Event>();
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
+
                 if (db.Events.Any(a => a.ID != null))
                 {
                     events = db.Events.Take(20).OrderByDescending(e => e.EventDate).ToList();
@@ -45,7 +48,7 @@ namespace MEG.Controllers
         public ActionResult Past()
         {
             List<Event> events = new List<Event>();
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 if (db.Events.Any(a => a.ID != null))
                 {
@@ -61,7 +64,7 @@ namespace MEG.Controllers
         public ActionResult Upcoming()
         {
             List<Event> events = new List<Event>();
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 if (db.Events.Any(a => a.ID != null))
                 {
@@ -78,9 +81,9 @@ namespace MEG.Controllers
         {
             try
             {
-                using (MegDatabaseEntities db = new MegDatabaseEntities())
+                using (MegEntities db = new MegEntities())
                 {
-                    Event article = db.Events.First(a => a.ID == articleID);
+                    Event article = db.Events.Include("EventReportPics").First(a => a.ID == articleID);
                     return View(article);
                 }
             }
@@ -110,7 +113,7 @@ namespace MEG.Controllers
             Guid ID = Guid.NewGuid();
             try
             {
-                using (MegDatabaseEntities db = new MegDatabaseEntities())
+                using (MegEntities db = new MegEntities())
                 {
                     Event article = new Event()
                     {
@@ -145,7 +148,7 @@ namespace MEG.Controllers
             };
             try
             {
-                using (MegDatabaseEntities db = new MegDatabaseEntities())
+                using (MegEntities db = new MegEntities())
                 {
                     Event ev = db.Events.First(e => e.ID == ArticleID);
                     db.Events.Remove(ev);
@@ -190,7 +193,7 @@ namespace MEG.Controllers
                     Guid articleID = new Guid(Request.UrlReferrer.ToString().Split('=')[1]);
                     string filenameWithExtension = String.Concat(articleID.ToString(), fileExtension);
                     Request.Files[0].SaveAs(Path.Combine(Server.MapPath("/Content/Uploads"), filenameWithExtension));
-                    using (MegDatabaseEntities db = new MegDatabaseEntities())
+                    using (MegEntities db = new MegEntities())
                     {
                         Guid id = new Guid(filename);
                         if (db.Events.Any(e => e.ID == id))
@@ -236,7 +239,7 @@ namespace MEG.Controllers
             {
                 Success = false,
             };
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 if (db.Events.Any(e => e.ID == articleMods.ArticleID))
                 {
@@ -304,6 +307,12 @@ namespace MEG.Controllers
                             case "title-type":
                                 article.TitleType = articleMods.Value;
                                 break;
+                            case "FakeSeats":
+                                article.FakeSeats = Int32.Parse(articleMods.Value);
+                                break;
+                            case "reportBody":
+                                article.ReportText = articleMods.Value;
+                                break;
                         }
                         db.SaveChanges();
                         aus.Success = true;
@@ -327,7 +336,7 @@ namespace MEG.Controllers
         public ActionResult Applicants()
         {
             List<Applicant> applicants = new List<Applicant>();
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 applicants = db.Applicants.Take(20).ToList();
             }
@@ -341,7 +350,7 @@ namespace MEG.Controllers
             //Checks made clientside with javascript, so all variables should be filled here
             bool success = false;
             string date = appl.DOB;
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 Applicant app = new Applicant()
                 {
@@ -406,7 +415,7 @@ namespace MEG.Controllers
         {
             bool success = false;
 
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 if (db.Applicants.Any())
                 {
@@ -468,10 +477,10 @@ namespace MEG.Controllers
         public ActionResult Reservations()
         {
             List<Event> events = new List<Event>();
-            using (MegDatabaseEntities meg = new MegDatabaseEntities())
+            using (MegEntities meg = new MegEntities())
             {
                 events = meg.Events.Where(e => e.EventDate.Value.Year == DateTime.Now.Year).Include("Reservations").ToList();
-                
+
                 return View(events);
             }
 
@@ -482,10 +491,10 @@ namespace MEG.Controllers
         {//This has to be open to the public shouldn't have an isauthorized attribute
             ReservationResult resRes = new ReservationResult();
             resRes.Success = false;
-            
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            Reservation res = new Reservation();
+            using (MegEntities db = new MegEntities())
             {
-                Reservation res = new Reservation()
+                res = new Reservation()
                 {
                     Name = Name,
                     NoSeats = NoSeats,
@@ -504,14 +513,32 @@ namespace MEG.Controllers
                 db.Reservations.Add(res);
                 db.SaveChanges();
                 resRes.Success = true;
-                MailHelper mh = new MailHelper();
-                mh.SendReservationSuccessEmail(res.ID);
-
-                HttpContext.Response.Cookies.Add(new HttpCookie(EventID.ToString(), true.ToString()));
-
             }
+            //Send confirmation email
+            MailHelper mh = new MailHelper();
+            mh.SendReservationSuccessEmail(this.ControllerContext, res.ID);
+
+            HttpContext.Response.Cookies.Add(new HttpCookie(EventID.ToString(), true.ToString()));
+
+
             return Json(resRes);
         }
+
+        public PartialViewResult ConfirmationEmail(Reservation res)
+        {
+            return PartialView(res);
+        }
+
+        public ViewResult ConfirmationEmailDesign()
+        {
+            Reservation res = new Reservation();
+            using (MegEntities db = new MegEntities())
+            {
+                res = db.Reservations.Include("Event").FirstOrDefault(r => r.EventID == new Guid("22847953-3f34-4cd5-a8e2-a6d73359bd83"));
+            }
+            return View("ConfirmationEmail", res);
+        }
+
         private class ReservationResult
         {
             public bool Success { get; set; }
@@ -521,10 +548,10 @@ namespace MEG.Controllers
         public JsonResult DeleteReservation(Guid EventID, Guid ReservationID)
         {//This has to be open to the public shouldn't have an isauthorized attribute
             bool success = false;
-            
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+
+            using (MegEntities db = new MegEntities())
             {
-                if (db.Reservations.Any(r => r.ID == ReservationID && r.EventID==EventID))
+                if (db.Reservations.Any(r => r.ID == ReservationID && r.EventID == EventID))
                 {
                     try
                     {
@@ -553,7 +580,7 @@ namespace MEG.Controllers
         public JsonResult AddToMailingList(string Name, string Email)
         {
             bool success = false;
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 if (!db.MailingLists.Any(e => e.Email == Email.Trim()))
                 {
@@ -588,7 +615,7 @@ namespace MEG.Controllers
         public PartialViewResult ReservationBox(Guid EventID)
         {
             Event ev = new Event();
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 ev = db.Events.First(e => e.ID == EventID);
             }
@@ -614,9 +641,9 @@ namespace MEG.Controllers
             {
                 MailingList = new List<MailingList>(),
             };
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
-                List<MailingList> allMailing = db.MailingLists.OrderBy(a=>a.Name).ToList();
+                List<MailingList> allMailing = db.MailingLists.OrderBy(a => a.Name).ToList();
                 mailData.MailingList = allMailing.Take(PageSize).ToList();
                 mailData.ContainsFirst = true;//Always returns the first
                 mailData.ContainsLast = allMailing.Last() == mailData.MailingList.Last();//May not contain the absolute last
@@ -634,25 +661,26 @@ namespace MEG.Controllers
         [AuthenticationHelper.IsUser]
         public JsonResult GetMoreMailing(int Direction, Guid IndexID)
         {
-            MailingData mData = new MailingData(){
+            MailingData mData = new MailingData()
+            {
                 MailingList = new List<MailingList>(),
             };
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 //Get the index of the IndexID sent
-                List<MailingList> allMailing = db.MailingLists.OrderBy(a=>a.Name).ToList();
+                List<MailingList> allMailing = db.MailingLists.OrderBy(a => a.Name).ToList();
                 MailingList indexItem = allMailing.FirstOrDefault(ml => ml.ID == IndexID);
                 int index = allMailing.IndexOf(indexItem);
-                
+
                 switch (Direction)
                 {
                     case 0://User requesting previous
-                        mData.MailingList = allMailing.Skip((index-PageSize)>0?(index-PageSize):0).Take(PageSize).ToList();
+                        mData.MailingList = allMailing.Skip((index - PageSize) > 0 ? (index - PageSize) : 0).Take(PageSize).ToList();
                         mData.ContainsFirst = allMailing.First() == mData.MailingList.First();//May not contain the absolute first
                         mData.ContainsLast = allMailing.Last() == mData.MailingList.Last();//May not contain the absolute last
                         break;
                     case 1://User requesting next
-                        mData.MailingList = allMailing.Skip(index+1).Take(PageSize).ToList();
+                        mData.MailingList = allMailing.Skip(index + 1).Take(PageSize).ToList();
                         mData.ContainsFirst = allMailing.First() == mData.MailingList.First();//May not contain the absolute first
                         mData.ContainsLast = allMailing.Last() == mData.MailingList.Last();//May not contain the absolute last
                         break;
@@ -670,19 +698,19 @@ namespace MEG.Controllers
         {
             bool success = false;
 
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
-                if (db.MailingLists.Any(ml=>ml.ID==mailData.ID))
+                if (db.MailingLists.Any(ml => ml.ID == mailData.ID))
                 {
                     //Applicant exists - make some changes
                     MailingList mailList = db.MailingLists.First(ml => ml.ID == mailData.ID);
                     switch (mailData.DataType)
                     {
-                        case "Name":  mailList.Name = mailData.Data;
+                        case "Name": mailList.Name = mailData.Data;
                             break;
-                        case "Email":  mailList.Email = mailData.Data;
+                        case "Email": mailList.Email = mailData.Data;
                             break;
-                        case "Added":  mailList.Added = DateTime.Parse(mailData.Data);
+                        case "Added": mailList.Added = DateTime.Parse(mailData.Data);
                             break;
 
                     }
@@ -699,11 +727,11 @@ namespace MEG.Controllers
         }
 
         [AuthenticationHelper.IsUser]
-         [HttpPost]
+        [HttpPost]
         public JsonResult DeleteFromMailingList(Guid mailingID)
         {
             bool _result = false;
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 if (db.MailingLists.Any(ml => ml.ID == mailingID))
                 {
@@ -729,7 +757,7 @@ namespace MEG.Controllers
         public JsonResult ChangeEventActivity(Guid eID, bool state)
         {
             bool success = false;
-            using (MegDatabaseEntities db = new MegDatabaseEntities())
+            using (MegEntities db = new MegEntities())
             {
                 if (db.Events.Any(e => e.ID == eID))
                 {
@@ -762,6 +790,120 @@ namespace MEG.Controllers
             public string DataType { get; set; }
         }
 
-        
+
+
+        public DownloadFileActionResult ReservationsAsExcel(Guid EventID)
+        {
+            GridView gv = new GridView();
+            using (MegEntities db = new MegEntities())
+            {
+                Event _event = db.Events.FirstOrDefault(e => e.ID == EventID);
+                gv.DataSource = db.Reservations.Where(r => r.EventID == EventID).ToList();
+                gv.DataBind();
+
+                return new DownloadFileActionResult(gv, String.Format("Reservations_{0}.xls", _event.Title));
+            }
+        }
+
+
+        [HttpPost]
+        [AuthenticationHelper.IsUser]
+        public JsonResult UploadReportImage(string filename)
+        {
+            List<ImageLoadSuccess> ilsList = new List<ImageLoadSuccess>();
+            if (Request.Files.Count > 0)
+            {
+                try
+                {
+                    string path = "/Content/Uploads/";
+                    using (MegEntities db = new MegEntities())
+                    {
+                        for (int i = 0; i < Request.Files.Count; i++ )
+                        {
+                            ImageLoadSuccess ils = new ImageLoadSuccess()
+                            {
+                                success = false,
+                            };
+                            string fileExtension = System.IO.Path.GetExtension(Request.Files[i].FileName);
+                            Guid articleID = new Guid(Request.UrlReferrer.ToString().Split('=')[1]);
+
+                            if (db.Events.Any(e => e.ID == articleID))
+                            {
+                                EventReportPic pic = new EventReportPic()
+                                {
+                                    ID = Guid.NewGuid(),
+                                    EventID = articleID,
+                                    ImageExtension = fileExtension,
+                                    OriginalFileNmae = System.IO.Path.GetFileNameWithoutExtension(Request.Files[i].FileName),
+                                };
+                                string filenameWithExtension = String.Concat(pic.ID.ToString(), fileExtension);
+                                Request.Files[i].SaveAs(Path.Combine(Server.MapPath("/Content/Uploads"), filenameWithExtension));
+                                try
+                                {
+                                    db.EventReportPics.Add(pic);
+                                    db.SaveChanges();
+                                    ils.success = true;
+                                    ils.url = filenameWithExtension;
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+
+
+                            }
+                            else
+                            {
+                                //article doesn't exit; weird!
+                            }
+                            ils.success = true;
+                            ilsList.Add(ils);
+                        }
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+            return Json(ilsList);
+        }
+
+        [HttpPost]
+        [AuthenticationHelper.IsUser]
+        public JsonResult RemoveReportImage(Guid ID)
+        {
+            bool success = false;
+
+            using (MegEntities db = new MegEntities())
+            {
+                EventReportPic pic = db.EventReportPics.FirstOrDefault(p => p.ID == ID);
+                if (pic != null)
+                {
+                    try
+                    {
+                        string filenameWithExtension = String.Concat(pic.ID.ToString(), pic.ImageExtension);
+                        System.IO.File.Delete(Path.Combine(Server.MapPath("/Content/Uploads"), filenameWithExtension));
+                        db.EventReportPics.Remove(pic);
+                        db.SaveChanges();
+                        success = true;
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+            return Json(success);
+        }
     }
 }
+
+/*
+Queue<Reservation> q = new Queue<Reservation>();
+                    q.Enqueue(Reservations.First());
+                    gv.DataSource = q;
+                    gv.DataBind();
+*/

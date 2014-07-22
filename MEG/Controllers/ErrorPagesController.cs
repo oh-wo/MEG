@@ -34,7 +34,7 @@ namespace MEG.Controllers
                 if (User.Identity.IsAuthenticated)
                 {
                     Guid ID = new Guid(User.Identity.Name);
-                    using(MegDatabaseEntities db = new MegDatabaseEntities()){
+                    using(MegEntities db = new MegEntities()){
                         if (db.MUsers.Any(u => u.ID == ID))
                         {
                             MUser thisUser = db.MUsers.First(u => u.ID == ID);

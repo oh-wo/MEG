@@ -84,7 +84,7 @@ namespace Meg.Controllers
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
-            using (MegDatabaseEntities Db = new MegDatabaseEntities())
+            using (MegEntities Db = new MegEntities())
             {
                 if (Db.MUsers.Any(u => u.Email == model.Email))
                 {
@@ -213,7 +213,7 @@ namespace Meg.Controllers
             {
                 try
                 {
-                    using (MegDatabaseEntities Db = new MegDatabaseEntities())
+                    using (MegEntities Db = new MegEntities())
                     {
                         if (Db.MUsers.Any(u => u.EmailCode == emailCode))//This isn't legit. Really need to get the userID from the page somehow??!
                         {                     //Currently just assuming that the user who clicked this link has the rights. ie mobile checks mobile no && smsCode

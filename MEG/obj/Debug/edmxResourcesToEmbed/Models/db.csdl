@@ -1,20 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="MegDatabaseModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-  <EntityContainer Name="MegDatabaseEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
-    <EntitySet Name="Applicants" EntityType="MegDatabaseModel.Applicant" />
-    <EntitySet Name="Events" EntityType="MegDatabaseModel.Event" />
-    <EntitySet Name="MailingLists" EntityType="MegDatabaseModel.MailingList" />
-    <EntitySet Name="MUsers" EntityType="MegDatabaseModel.MUser" />
-    <EntitySet Name="Reservations" EntityType="MegDatabaseModel.Reservation" />
-    <AssociationSet Name="FK__Event__CreatedBy__108B795B" Association="MegDatabaseModel.FK__Event__CreatedBy__108B795B">
-      <End Role="MUser" EntitySet="MUsers" />
-      <End Role="Event" EntitySet="Events" />
-    </AssociationSet>
-    <AssociationSet Name="FK__Reservati__Event__276EDEB3" Association="MegDatabaseModel.FK__Reservati__Event__276EDEB3">
-      <End Role="Event" EntitySet="Events" />
-      <End Role="Reservation" EntitySet="Reservations" />
-    </AssociationSet>
-  </EntityContainer>
+<Schema Namespace="MegDb" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
   <EntityType Name="Applicant">
     <Key>
       <PropertyRef Name="ID" />
@@ -63,8 +48,21 @@
     <Property Name="ReminderSent" Type="Boolean" />
     <Property Name="Active" Type="Boolean" />
     <Property Name="TitleType" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="MUser" Relationship="MegDatabaseModel.FK__Event__CreatedBy__108B795B" FromRole="Event" ToRole="MUser" />
-    <NavigationProperty Name="Reservations" Relationship="MegDatabaseModel.FK__Reservati__Event__276EDEB3" FromRole="Event" ToRole="Reservation" />
+    <Property Name="FakeSeats" Type="Int32" />
+    <Property Name="ReportText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="MUser" Relationship="Self.FK__Event__CreatedBy__108B795B" FromRole="Event" ToRole="MUser" />
+    <NavigationProperty Name="EventReportPics" Relationship="Self.FK__EventRepo__Event__300424B4" FromRole="Event" ToRole="EventReportPic" />
+    <NavigationProperty Name="Reservations" Relationship="Self.FK__Reservati__Event__276EDEB3" FromRole="Event" ToRole="Reservations" />
+  </EntityType>
+  <EntityType Name="EventReportPic">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Guid" Nullable="false" />
+    <Property Name="OriginalFileNmae" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="ImageExtension" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="EventID" Type="Guid" />
+    <NavigationProperty Name="Event" Relationship="Self.FK__EventRepo__Event__300424B4" FromRole="EventReportPic" ToRole="Event" />
   </EntityType>
   <EntityType Name="MailingList">
     <Key>
@@ -98,7 +96,7 @@
     <Property Name="FailedPasswordAttemptCount" Type="Int32" />
     <Property Name="FailedPasswordAnswerAttemptCount" Type="Int32" />
     <Property Name="IsBusinessRelated" Type="Boolean" />
-    <NavigationProperty Name="Events" Relationship="MegDatabaseModel.FK__Event__CreatedBy__108B795B" FromRole="MUser" ToRole="Event" />
+    <NavigationProperty Name="Events" Relationship="Self.FK__Event__CreatedBy__108B795B" FromRole="MUser" ToRole="Event" />
   </EntityType>
   <EntityType Name="Reservation">
     <Key>
@@ -113,11 +111,11 @@
     <Property Name="MemberImeche" Type="Boolean" />
     <Property Name="Timestamp" Type="DateTime" Precision="7" />
     <Property Name="EventID" Type="Guid" />
-    <NavigationProperty Name="Event" Relationship="MegDatabaseModel.FK__Reservati__Event__276EDEB3" FromRole="Reservation" ToRole="Event" />
+    <NavigationProperty Name="Event" Relationship="Self.FK__Reservati__Event__276EDEB3" FromRole="Reservations" ToRole="Event" />
   </EntityType>
   <Association Name="FK__Event__CreatedBy__108B795B">
-    <End Type="MegDatabaseModel.MUser" Role="MUser" Multiplicity="0..1" />
-    <End Type="MegDatabaseModel.Event" Role="Event" Multiplicity="*" />
+    <End Role="MUser" Type="Self.MUser" Multiplicity="0..1" />
+    <End Role="Event" Type="Self.Event" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="MUser">
         <PropertyRef Name="ID" />
@@ -127,16 +125,48 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Reservati__Event__276EDEB3">
-    <End Type="MegDatabaseModel.Event" Role="Event" Multiplicity="0..1" />
-    <End Type="MegDatabaseModel.Reservation" Role="Reservation" Multiplicity="*" />
+  <Association Name="FK__EventRepo__Event__300424B4">
+    <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+    <End Role="EventReportPic" Type="Self.EventReportPic" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Event">
         <PropertyRef Name="ID" />
       </Principal>
-      <Dependent Role="Reservation">
+      <Dependent Role="EventReportPic">
         <PropertyRef Name="EventID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__Reservati__Event__276EDEB3">
+    <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+    <End Role="Reservations" Type="Self.Reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Reservations">
+        <PropertyRef Name="EventID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MegEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Applicants" EntityType="Self.Applicant" />
+    <EntitySet Name="Events" EntityType="Self.Event" />
+    <EntitySet Name="EventReportPics" EntityType="Self.EventReportPic" />
+    <EntitySet Name="MailingLists" EntityType="Self.MailingList" />
+    <EntitySet Name="MUsers" EntityType="Self.MUser" />
+    <EntitySet Name="Reservations" EntityType="Self.Reservation" />
+    <AssociationSet Name="FK__Event__CreatedBy__108B795B" Association="Self.FK__Event__CreatedBy__108B795B">
+      <End Role="MUser" EntitySet="MUsers" />
+      <End Role="Event" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EventRepo__Event__300424B4" Association="Self.FK__EventRepo__Event__300424B4">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="EventReportPic" EntitySet="EventReportPics" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Reservati__Event__276EDEB3" Association="Self.FK__Reservati__Event__276EDEB3">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="Reservations" EntitySet="Reservations" />
+    </AssociationSet>
+  </EntityContainer>
 </Schema>

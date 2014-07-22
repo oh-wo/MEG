@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="MegDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+<Schema Namespace="MegDb.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
   <EntityType Name="Applicants">
     <Key>
       <PropertyRef Name="ID" />
@@ -48,6 +48,17 @@
     <Property Name="ReminderSent" Type="bit" />
     <Property Name="Active" Type="bit" />
     <Property Name="TitleType" Type="nvarchar" MaxLength="1000" />
+    <Property Name="FakeSeats" Type="int" />
+    <Property Name="ReportText" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="EventReportPic">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="OriginalFileNmae" Type="nvarchar" MaxLength="1000" />
+    <Property Name="ImageExtension" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="MailingList">
     <Key>
@@ -108,6 +119,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__EventRepo__Event__300424B4">
+    <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+    <End Role="EventReportPic" Type="Self.EventReportPic" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="EventReportPic">
+        <PropertyRef Name="EventID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK__Reservati__Event__276EDEB3">
     <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
     <End Role="Reservations" Type="Self.Reservations" Multiplicity="*" />
@@ -120,15 +143,20 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityContainer Name="MegDatabaseModelStoreContainer">
+  <EntityContainer Name="MegDbStoreContainer">
     <EntitySet Name="Applicants" EntityType="Self.Applicants" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EventReportPic" EntityType="Self.EventReportPic" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MailingList" EntityType="Self.MailingList" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MUser" EntityType="Self.MUser" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK__Event__CreatedBy__108B795B" Association="Self.FK__Event__CreatedBy__108B795B">
       <End Role="MUser" EntitySet="MUser" />
       <End Role="Event" EntitySet="Event" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EventRepo__Event__300424B4" Association="Self.FK__EventRepo__Event__300424B4">
+      <End Role="Event" EntitySet="Event" />
+      <End Role="EventReportPic" EntitySet="EventReportPic" />
     </AssociationSet>
     <AssociationSet Name="FK__Reservati__Event__276EDEB3" Association="Self.FK__Reservati__Event__276EDEB3">
       <End Role="Event" EntitySet="Event" />

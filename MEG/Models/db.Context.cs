@@ -13,10 +13,10 @@ namespace MEG.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MegDatabaseEntities : DbContext
+    public partial class MegEntities : DbContext
     {
-        public MegDatabaseEntities()
-            : base("name=MegDatabaseEntities")
+        public MegEntities()
+            : base("name=MegEntities")
         {
         }
     
@@ -27,6 +27,7 @@ namespace MEG.Models
     
         public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<EventReportPic> EventReportPics { get; set; }
         public DbSet<MailingList> MailingLists { get; set; }
         public DbSet<MUser> MUsers { get; set; }
         public DbSet<Reservation> Reservations { get; set; }

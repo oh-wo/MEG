@@ -3,6 +3,8 @@
 @{
     ViewBag.Title = "MEG - Mechanical Engineering Group";
 }
+
+
 <style>
     .e-container {
         float: left;
@@ -156,57 +158,59 @@
     }
     @foreach (Event e in Model)
     {
+        int SeatsRemaining = (e.TotalSeats.GetValueOrDefault() - e.SeatsTaken.GetValueOrDefault());
+
+        //SeatsRemaining = SeatsRemaining < 0 ? (SeatsRemaining + e.FakeSeats.GetValueOrDefault()) : SeatsRemaining;
+        if (User.Identity.IsAuthenticated)
+        {
+            //show the real number if you're authenticated
+        }
+        else
+        {
+            //only apply the placeholder seats if there are enough remaining - otherwise remove them
+            SeatsRemaining = (SeatsRemaining - e.FakeSeats.GetValueOrDefault()) > 10 ? (SeatsRemaining - e.FakeSeats.GetValueOrDefault()) : SeatsRemaining;
+            //no matter what we need to show at least 0 seats
+            SeatsRemaining = SeatsRemaining > 0 ? SeatsRemaining : 0;
+        }
+
         if ((e.Active ?? false) || User.Identity.IsAuthenticated)
         {
-        <div class="e-container" articleID="@e.ID" >
-            <div class="e-title">@e.Title</div>
-            <div class="e-type">@e.TitleType</div>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div class="e-active-container">
-                    <input type="checkbox" class="e-active" name="e-active"
-                    @if (e.Active ?? false)
-                    {
-                        @Html.Raw("checked=\"checked\"");
-                    }
-                    />
-                    <label for="e-active">Active</label>
-                </div>
-            }
-            <input class="e-rsvp" type="button" @{if (User.Identity.IsAuthenticated || e.EventDate.Value < DateTime.Now)
-                                                               {
-                                                               @Html.Raw("disabled=\"disabled\" value=\"rsvp closed\"");
-                                                               }
-                                                               else
-                                                               {
-                                                     @Html.Raw("value=\"rsvp\" ");
-                                                                   //Cursory check to see if user has already rsvpd to this event
-                                                                   if (HttpContext.Current != null)
-                                                                   {
-                                                                       if (HttpContext.Current.Request.Cookies.AllKeys.Contains(e.ID.ToString()))
-                                                                       {
-                                                                           if (HttpContext.Current.Request.Cookies[e.ID.ToString()].Value == true.ToString())
-                                                                           {
-                            @Html.Raw("disabled=\"disabled\"");
-                            @Html.Raw(" title=\"You've already rsvp'd to this event. Go to your emails to modify your reservation\"");
-                                                                           }
-                                                                       }
-                                                                       else
-                                                                       {
-
-                                                                       }
-
-                                                                   }
-                                                               }}/>
-            <div class="e-seats">@(e.TotalSeats.GetValueOrDefault() - e.SeatsTaken.GetValueOrDefault()) / @e.TotalSeats.GetValueOrDefault() seats remaining</div>
-            <div class="e-date">@e.EventDate.GetValueOrDefault().ToLongDateString()</div>
-            <div class="e-body">@e.Body</div>
+            <div class="e-container" articleid="@e.ID">
+                <div class="e-title">@e.Title</div>
+                <div class="e-type">@e.TitleType</div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="e-active-container">
+                        <input type="checkbox" class="e-active" name="e-active"
+                               @if (e.Active ?? false) { @Html.Raw("checked=\"checked\"") ; } />
+                        <label for="e-active">Active</label>
+                    </div>
+                }
+                <input class="e-rsvp" type="button" @{if (User.Identity.IsAuthenticated || e.EventDate.Value < DateTime.Now) { 
+                                                          @Html.Raw("disabled=\"disabled\" value=\"rsvp closed\"") ; 
+                } else { 
+                                                          @Html.Raw("value=\"rsvp\" ") ; //Cursory check to see if user has already rsvpd to this event //or if the seats are less than or equal to 0  
+                    if ((HttpContext.Current != null 
+                        && HttpContext.Current.Request.Cookies.AllKeys.Contains(e.ID.ToString()) 
+                        && HttpContext.Current.Request.Cookies[e.ID.ToString()].Value == true.ToString())  
+                        || SeatsRemaining == 0) { 
+                        @Html.Raw("disabled=\"disabled\"") ;  
+                } 
+                }
+                       } />
 
 
-            <img class="e-image" src="@String.Concat("/Content/Uploads/", e.ID, e.ImageExtension)" onerror="this.src='/Content/noimage.jpg';">
 
-            @Html.Partial("ReservationBox", e)
-        </div>
+                <div class="e-seats">@SeatsRemaining / @e.TotalSeats.GetValueOrDefault() seats remaining @Html.Raw(User.Identity.IsAuthenticated ? String.Format("& {0} {1}",e.FakeSeats.GetValueOrDefault()," placeholder seats taken") : "")</div>
+                <div class="e-date">@e.EventDate.GetValueOrDefault().ToLongDateString()</div>
+                <div class="e-body">@e.Body</div>
+
+
+                <img class="e-image" src="@String.Concat("/Content/Uploads/", e.ID, e.ImageExtension)" onerror="this.src='/Content/noimage.jpg';">
+
+                @Html.Partial("ReservationBox", e)
+            </div>
         }
+        
     }
 </div>

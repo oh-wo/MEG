@@ -16,6 +16,7 @@ namespace MEG.Models
     {
         public Event()
         {
+            this.EventReportPics = new HashSet<EventReportPic>();
             this.Reservations = new HashSet<Reservation>();
         }
     
@@ -41,8 +42,11 @@ namespace MEG.Models
         public Nullable<bool> ReminderSent { get; set; }
         public Nullable<bool> Active { get; set; }
         public string TitleType { get; set; }
+        public Nullable<int> FakeSeats { get; set; }
+        public string ReportText { get; set; }
     
         public virtual MUser MUser { get; set; }
+        public virtual ICollection<EventReportPic> EventReportPics { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
     }
 }

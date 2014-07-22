@@ -163,6 +163,9 @@ select, input, textarea {
 table[articleID] tbody tr:hover {
     background-color: #a6dbed;
 }
+table[articleID] tbody tr {
+    background-color:#fff;
+}
 
 table[articleID] a:hover {
     text-decoration: underline;
@@ -580,8 +583,8 @@ th {
         }
 
 td {
-    padding: .25em 2em .25em 0;
-    border: 0 none;
+padding: .25em 1em 0.25em 0;
+border: 0 none;
 }
 
 tr.pager td {

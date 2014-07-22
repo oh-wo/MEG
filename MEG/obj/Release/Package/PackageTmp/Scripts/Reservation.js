@@ -14,6 +14,14 @@ $(document).on('click', '#rsvp', function (e) {
     $('body').css('overflow', 'hidden');
 });
 
+$(document).on('change', '.notAMember', function (e) {
+    var $this = $(this);
+    if ($this.attr('checked') == 'checked') {
+        $this.closest('tbody').find('input[type="checkbox"]:not(.notAMember)').removeAttr('checked');
+    }
+
+})
+
 function posTop() {
     return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
 }

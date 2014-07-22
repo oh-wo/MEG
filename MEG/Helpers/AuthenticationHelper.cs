@@ -35,7 +35,7 @@ namespace MEG.Helpers
 
         public static MUser GetUser(string email)
         {
-            using (var Db = new MegDatabaseEntities())
+            using (var Db = new MegEntities())
             {
                 return Db.MUsers.First(u => email == u.Email) ?? null;
             }
@@ -43,7 +43,7 @@ namespace MEG.Helpers
 
         public static MUser GetUser(Guid id)
         {
-            using (var Db = new MegDatabaseEntities())
+            using (var Db = new MegEntities())
             {
                 return Db.MUsers.First(u => u.ID == id);
             }
@@ -59,7 +59,7 @@ namespace MEG.Helpers
         {
             get
             {
-                using (var Db = new MegDatabaseEntities())
+                using (var Db = new MegEntities())
                 {
                     if (!HttpContext.Current.User.Identity.IsAuthenticated)
                         return null;
@@ -115,7 +115,7 @@ namespace MEG.Helpers
         /*General account functions */
         public static bool UpdateFailedPasswordAttemptCount(Guid id)
         {
-            using (var Db = new MegDatabaseEntities())
+            using (var Db = new MegEntities())
             {
                 bool success = false;
                 try
@@ -136,7 +136,7 @@ namespace MEG.Helpers
 
         public static MUser ValidateUser(string email, string password)
         {
-            using (var Db = new MegDatabaseEntities())
+            using (var Db = new MegEntities())
             {
                 if (!string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(email))
                 {
@@ -172,7 +172,7 @@ namespace MEG.Helpers
 
         public static Guid? CreateUser(string email, string password)
         {
-            using (var Db = new MegDatabaseEntities())
+            using (var Db = new MegEntities())
             {
                 bool success = false;
 
@@ -210,7 +210,7 @@ namespace MEG.Helpers
 
         public static bool ChangePassword(string email, string oldPassword, string newPassword)
         {
-            using (var Db = new MegDatabaseEntities())
+            using (var Db = new MegEntities())
             {
                 if ((ValidateUser(email, oldPassword) == null) || string.IsNullOrEmpty(newPassword.Trim()))
                     return false;

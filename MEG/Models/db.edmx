@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
   <!-- EF Runtime content -->
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MegDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MegDb.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityType Name="Applicants">
           <Key>
             <PropertyRef Name="ID" />
@@ -53,6 +53,17 @@
           <Property Name="ReminderSent" Type="bit" />
           <Property Name="Active" Type="bit" />
           <Property Name="TitleType" Type="nvarchar" MaxLength="1000" />
+          <Property Name="FakeSeats" Type="int" />
+          <Property Name="ReportText" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="EventReportPic">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="OriginalFileNmae" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ImageExtension" Type="nvarchar" MaxLength="100" />
+          <Property Name="EventID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="MailingList">
           <Key>
@@ -113,6 +124,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__EventRepo__Event__300424B4">
+          <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+          <End Role="EventReportPic" Type="Self.EventReportPic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EventReportPic">
+              <PropertyRef Name="EventID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Reservati__Event__276EDEB3">
           <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
           <End Role="Reservations" Type="Self.Reservations" Multiplicity="*" />
@@ -125,9 +148,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MegDatabaseModelStoreContainer">
+        <EntityContainer Name="MegDbStoreContainer">
           <EntitySet Name="Applicants" EntityType="Self.Applicants" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EventReportPic" EntityType="Self.EventReportPic" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MailingList" EntityType="Self.MailingList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MUser" EntityType="Self.MUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="dbo" store:Type="Tables" />
@@ -135,30 +159,20 @@
             <End Role="MUser" EntitySet="MUser" />
             <End Role="Event" EntitySet="Event" />
           </AssociationSet>
+          <AssociationSet Name="FK__EventRepo__Event__300424B4" Association="Self.FK__EventRepo__Event__300424B4">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="EventReportPic" EntitySet="EventReportPic" />
+          </AssociationSet>
           <AssociationSet Name="FK__Reservati__Event__276EDEB3" Association="Self.FK__Reservati__Event__276EDEB3">
             <End Role="Event" EntitySet="Event" />
             <End Role="Reservations" EntitySet="Reservations" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="MegDatabaseModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="MegDatabaseEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
-          <EntitySet Name="Applicants" EntityType="MegDatabaseModel.Applicant" />
-          <EntitySet Name="Events" EntityType="MegDatabaseModel.Event" />
-          <EntitySet Name="MailingLists" EntityType="MegDatabaseModel.MailingList" />
-          <EntitySet Name="MUsers" EntityType="MegDatabaseModel.MUser" />
-          <EntitySet Name="Reservations" EntityType="MegDatabaseModel.Reservation" />
-          <AssociationSet Name="FK__Event__CreatedBy__108B795B" Association="MegDatabaseModel.FK__Event__CreatedBy__108B795B">
-            <End Role="MUser" EntitySet="MUsers" />
-            <End Role="Event" EntitySet="Events" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Reservati__Event__276EDEB3" Association="MegDatabaseModel.FK__Reservati__Event__276EDEB3">
-            <End Role="Event" EntitySet="Events" />
-            <End Role="Reservation" EntitySet="Reservations" />
-          </AssociationSet>
-        </EntityContainer>
+      <Schema Namespace="MegDb" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityType Name="Applicant">
           <Key>
             <PropertyRef Name="ID" />
@@ -207,8 +221,21 @@
           <Property Name="ReminderSent" Type="Boolean" />
           <Property Name="Active" Type="Boolean" />
           <Property Name="TitleType" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="MUser" Relationship="MegDatabaseModel.FK__Event__CreatedBy__108B795B" FromRole="Event" ToRole="MUser" />
-          <NavigationProperty Name="Reservations" Relationship="MegDatabaseModel.FK__Reservati__Event__276EDEB3" FromRole="Event" ToRole="Reservation" />
+          <Property Name="FakeSeats" Type="Int32" />
+          <Property Name="ReportText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MUser" Relationship="Self.FK__Event__CreatedBy__108B795B" FromRole="Event" ToRole="MUser" />
+          <NavigationProperty Name="EventReportPics" Relationship="Self.FK__EventRepo__Event__300424B4" FromRole="Event" ToRole="EventReportPic" />
+          <NavigationProperty Name="Reservations" Relationship="Self.FK__Reservati__Event__276EDEB3" FromRole="Event" ToRole="Reservations" />
+        </EntityType>
+        <EntityType Name="EventReportPic">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="OriginalFileNmae" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ImageExtension" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventID" Type="Guid" />
+          <NavigationProperty Name="Event" Relationship="Self.FK__EventRepo__Event__300424B4" FromRole="EventReportPic" ToRole="Event" />
         </EntityType>
         <EntityType Name="MailingList">
           <Key>
@@ -242,7 +269,7 @@
           <Property Name="FailedPasswordAttemptCount" Type="Int32" />
           <Property Name="FailedPasswordAnswerAttemptCount" Type="Int32" />
           <Property Name="IsBusinessRelated" Type="Boolean" />
-          <NavigationProperty Name="Events" Relationship="MegDatabaseModel.FK__Event__CreatedBy__108B795B" FromRole="MUser" ToRole="Event" />
+          <NavigationProperty Name="Events" Relationship="Self.FK__Event__CreatedBy__108B795B" FromRole="MUser" ToRole="Event" />
         </EntityType>
         <EntityType Name="Reservation">
           <Key>
@@ -257,11 +284,11 @@
           <Property Name="MemberImeche" Type="Boolean" />
           <Property Name="Timestamp" Type="DateTime" Precision="7" />
           <Property Name="EventID" Type="Guid" />
-          <NavigationProperty Name="Event" Relationship="MegDatabaseModel.FK__Reservati__Event__276EDEB3" FromRole="Reservation" ToRole="Event" />
+          <NavigationProperty Name="Event" Relationship="Self.FK__Reservati__Event__276EDEB3" FromRole="Reservations" ToRole="Event" />
         </EntityType>
         <Association Name="FK__Event__CreatedBy__108B795B">
-          <End Type="MegDatabaseModel.MUser" Role="MUser" Multiplicity="0..1" />
-          <End Type="MegDatabaseModel.Event" Role="Event" Multiplicity="*" />
+          <End Role="MUser" Type="Self.MUser" Multiplicity="0..1" />
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MUser">
               <PropertyRef Name="ID" />
@@ -271,122 +298,166 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Reservati__Event__276EDEB3">
-          <End Type="MegDatabaseModel.Event" Role="Event" Multiplicity="0..1" />
-          <End Type="MegDatabaseModel.Reservation" Role="Reservation" Multiplicity="*" />
+        <Association Name="FK__EventRepo__Event__300424B4">
+          <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+          <End Role="EventReportPic" Type="Self.EventReportPic" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Event">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="Reservation">
+            <Dependent Role="EventReportPic">
               <PropertyRef Name="EventID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Reservati__Event__276EDEB3">
+          <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+          <End Role="Reservations" Type="Self.Reservation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Reservations">
+              <PropertyRef Name="EventID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MegEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Applicants" EntityType="Self.Applicant" />
+          <EntitySet Name="Events" EntityType="Self.Event" />
+          <EntitySet Name="EventReportPics" EntityType="Self.EventReportPic" />
+          <EntitySet Name="MailingLists" EntityType="Self.MailingList" />
+          <EntitySet Name="MUsers" EntityType="Self.MUser" />
+          <EntitySet Name="Reservations" EntityType="Self.Reservation" />
+          <AssociationSet Name="FK__Event__CreatedBy__108B795B" Association="Self.FK__Event__CreatedBy__108B795B">
+            <End Role="MUser" EntitySet="MUsers" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EventRepo__Event__300424B4" Association="Self.FK__EventRepo__Event__300424B4">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="EventReportPic" EntitySet="EventReportPics" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Reservati__Event__276EDEB3" Association="Self.FK__Reservati__Event__276EDEB3">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="Reservations" EntitySet="Reservations" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="MegDatabaseModelStoreContainer" CdmEntityContainer="MegDatabaseEntities">
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MegDbStoreContainer" CdmEntityContainer="MegEntities">
           <EntitySetMapping Name="Applicants">
-            <EntityTypeMapping TypeName="MegDatabaseModel.Applicant">
+            <EntityTypeMapping TypeName="MegDb.Applicant">
               <MappingFragment StoreEntitySet="Applicants">
-                <ScalarProperty Name="LearnedSocieties" ColumnName="LearnedSocieties" />
-                <ScalarProperty Name="Employeer" ColumnName="Employeer" />
-                <ScalarProperty Name="WorkExperience" ColumnName="WorkExperience" />
-                <ScalarProperty Name="AcademicQualifications" ColumnName="AcademicQualifications" />
-                <ScalarProperty Name="PreferredEmail" ColumnName="PreferredEmail" />
-                <ScalarProperty Name="BusinessEmail" ColumnName="BusinessEmail" />
-                <ScalarProperty Name="PersonalEmail" ColumnName="PersonalEmail" />
-                <ScalarProperty Name="PreferredPhone" ColumnName="PreferredPhone" />
-                <ScalarProperty Name="BusinessPhone" ColumnName="BusinessPhone" />
-                <ScalarProperty Name="PersonalPhone" ColumnName="PersonalPhone" />
-                <ScalarProperty Name="PreferredAddress" ColumnName="PreferredAddress" />
-                <ScalarProperty Name="BusinessAddress" ColumnName="BusinessAddress" />
-                <ScalarProperty Name="PersonalAddress" ColumnName="PersonalAddress" />
-                <ScalarProperty Name="DOB" ColumnName="DOB" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="PersonalAddress" ColumnName="PersonalAddress" />
+                <ScalarProperty Name="BusinessAddress" ColumnName="BusinessAddress" />
+                <ScalarProperty Name="PreferredAddress" ColumnName="PreferredAddress" />
+                <ScalarProperty Name="PersonalPhone" ColumnName="PersonalPhone" />
+                <ScalarProperty Name="BusinessPhone" ColumnName="BusinessPhone" />
+                <ScalarProperty Name="PreferredPhone" ColumnName="PreferredPhone" />
+                <ScalarProperty Name="PersonalEmail" ColumnName="PersonalEmail" />
+                <ScalarProperty Name="BusinessEmail" ColumnName="BusinessEmail" />
+                <ScalarProperty Name="PreferredEmail" ColumnName="PreferredEmail" />
+                <ScalarProperty Name="AcademicQualifications" ColumnName="AcademicQualifications" />
+                <ScalarProperty Name="WorkExperience" ColumnName="WorkExperience" />
+                <ScalarProperty Name="Employeer" ColumnName="Employeer" />
+                <ScalarProperty Name="LearnedSocieties" ColumnName="LearnedSocieties" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Events">
-            <EntityTypeMapping TypeName="MegDatabaseModel.Event">
+            <EntityTypeMapping TypeName="MegDb.Event">
               <MappingFragment StoreEntitySet="Event">
-                <ScalarProperty Name="TitleType" ColumnName="TitleType" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="ReminderSent" ColumnName="ReminderSent" />
-                <ScalarProperty Name="ReminderSendDate" ColumnName="ReminderSendDate" />
-                <ScalarProperty Name="ImageExtension" ColumnName="ImageExtension" />
-                <ScalarProperty Name="HasImage" ColumnName="HasImage" />
-                <ScalarProperty Name="DateTimeStamp" ColumnName="DateTimeStamp" />
-                <ScalarProperty Name="SeatsTaken" ColumnName="SeatsTaken" />
-                <ScalarProperty Name="TotalSeats" ColumnName="TotalSeats" />
-                <ScalarProperty Name="Venue4" ColumnName="Venue4" />
-                <ScalarProperty Name="Venue3" ColumnName="Venue3" />
-                <ScalarProperty Name="Venue2" ColumnName="Venue2" />
-                <ScalarProperty Name="Venue1" ColumnName="Venue1" />
-                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
-                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
-                <ScalarProperty Name="Presenter" ColumnName="Presenter" />
-                <ScalarProperty Name="Body" ColumnName="Body" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Body" ColumnName="Body" />
+                <ScalarProperty Name="Presenter" ColumnName="Presenter" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="Venue1" ColumnName="Venue1" />
+                <ScalarProperty Name="Venue2" ColumnName="Venue2" />
+                <ScalarProperty Name="Venue3" ColumnName="Venue3" />
+                <ScalarProperty Name="Venue4" ColumnName="Venue4" />
+                <ScalarProperty Name="TotalSeats" ColumnName="TotalSeats" />
+                <ScalarProperty Name="SeatsTaken" ColumnName="SeatsTaken" />
+                <ScalarProperty Name="DateTimeStamp" ColumnName="DateTimeStamp" />
+                <ScalarProperty Name="HasImage" ColumnName="HasImage" />
+                <ScalarProperty Name="ImageExtension" ColumnName="ImageExtension" />
+                <ScalarProperty Name="ReminderSendDate" ColumnName="ReminderSendDate" />
+                <ScalarProperty Name="ReminderSent" ColumnName="ReminderSent" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="TitleType" ColumnName="TitleType" />
+                <ScalarProperty Name="FakeSeats" ColumnName="FakeSeats" />
+                <ScalarProperty Name="ReportText" ColumnName="ReportText" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventReportPics">
+            <EntityTypeMapping TypeName="MegDb.EventReportPic">
+              <MappingFragment StoreEntitySet="EventReportPic">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="OriginalFileNmae" ColumnName="OriginalFileNmae" />
+                <ScalarProperty Name="ImageExtension" ColumnName="ImageExtension" />
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MailingLists">
-            <EntityTypeMapping TypeName="MegDatabaseModel.MailingList">
+            <EntityTypeMapping TypeName="MegDb.MailingList">
               <MappingFragment StoreEntitySet="MailingList">
-                <ScalarProperty Name="Added" ColumnName="Added" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Added" ColumnName="Added" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MUsers">
-            <EntityTypeMapping TypeName="MegDatabaseModel.MUser">
+            <EntityTypeMapping TypeName="MegDb.MUser">
               <MappingFragment StoreEntitySet="MUser">
-                <ScalarProperty Name="IsBusinessRelated" ColumnName="IsBusinessRelated" />
-                <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
-                <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
-                <ScalarProperty Name="LastLockoutDate" ColumnName="LastLockoutDate" />
-                <ScalarProperty Name="LastPasswordChangeDate" ColumnName="LastPasswordChangeDate" />
-                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
-                <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
-                <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
-                <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
-                <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="EmailVerified" ColumnName="EmailVerified" />
-                <ScalarProperty Name="EmailCode" ColumnName="EmailCode" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailCode" ColumnName="EmailCode" />
+                <ScalarProperty Name="EmailVerified" ColumnName="EmailVerified" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+                <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+                <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="LastPasswordChangeDate" ColumnName="LastPasswordChangeDate" />
+                <ScalarProperty Name="LastLockoutDate" ColumnName="LastLockoutDate" />
+                <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
+                <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
+                <ScalarProperty Name="IsBusinessRelated" ColumnName="IsBusinessRelated" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Reservations">
-            <EntityTypeMapping TypeName="MegDatabaseModel.Reservation">
+            <EntityTypeMapping TypeName="MegDb.Reservation">
               <MappingFragment StoreEntitySet="Reservations">
-                <ScalarProperty Name="EventID" ColumnName="EventID" />
-                <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
-                <ScalarProperty Name="MemberImeche" ColumnName="MemberImeche" />
-                <ScalarProperty Name="MemberIpenz" ColumnName="MemberIpenz" />
-                <ScalarProperty Name="MemberMeg" ColumnName="MemberMeg" />
-                <ScalarProperty Name="NoSeats" ColumnName="NoSeats" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="NoSeats" ColumnName="NoSeats" />
+                <ScalarProperty Name="MemberMeg" ColumnName="MemberMeg" />
+                <ScalarProperty Name="MemberIpenz" ColumnName="MemberIpenz" />
+                <ScalarProperty Name="MemberImeche" ColumnName="MemberImeche" />
+                <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -395,7 +466,7 @@
     </edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
-  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
     <Connection>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
@@ -404,13 +475,13 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="True" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-        <DesignerProperty Name="UseLegacyProvider" Value="True" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
-    <Diagrams />
+    <Diagrams></Diagrams>
   </Designer>
 </edmx:Edmx>

@@ -4,14 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3a4f918308fb49fbbae8d9b89bd435f4" Name="Diagram1" ZoomLevel="34">
-        <EntityTypeShape EntityType="MegDatabaseModel.Applicant" Width="1.5" PointX="5.75" PointY="6.75" />
-        <EntityTypeShape EntityType="MegDatabaseModel.Event" Width="1.5" PointX="3" PointY="1.125" />
-        <EntityTypeShape EntityType="MegDatabaseModel.MailingList" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="MegDatabaseModel.MUser" Width="1.5" PointX="0.75" PointY="1.5" />
-        <EntityTypeShape EntityType="MegDatabaseModel.Reservation" Width="1.5" PointX="5.25" PointY="2.5" />
-        <AssociationConnector Association="MegDatabaseModel.FK__Event__CreatedBy__108B795B" />
-        <AssociationConnector Association="MegDatabaseModel.FK__Reservati__Event__276EDEB3" />
+      <Diagram DiagramId="e7e82d2f7dab43f18432fb39fa103257" Name="Diagram1" ZoomLevel="87">
+        <EntityTypeShape EntityType="MegDb.Applicant" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MegDb.Event" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MegDb.EventReportPic" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MegDb.MailingList" Width="1.5" PointX="7.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MegDb.MUser" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MegDb.Reservation" Width="1.5" PointX="5.25" PointY="4.125" IsExpanded="true" />
+        <AssociationConnector Association="MegDb.FK__Event__CreatedBy__108B795B" ManuallyRouted="false" />
+        <AssociationConnector Association="MegDb.FK__EventRepo__Event__300424B4" ManuallyRouted="false" />
+        <AssociationConnector Association="MegDb.FK__Reservati__Event__276EDEB3" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

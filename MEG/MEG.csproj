@@ -149,6 +149,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AuthenticationHelper.cs" />
+    <Compile Include="Helpers\DownloadFileActionResult.cs" />
     <Compile Include="Helpers\MailHelper.cs" />
     <Compile Include="Mailers\IUserMailer.cs" />
     <Compile Include="Mailers\UserMailer.cs" />
@@ -171,6 +172,9 @@
       <DependentUpon>db.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Event.cs">
+      <DependentUpon>db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EventReportPic.cs">
       <DependentUpon>db.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MailingList.cs">
@@ -250,14 +254,29 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\Uploads\44b2c5c7-ebce-40f9-9feb-cdcd640ff3bd.jpg" />
+    <Content Include="Content\Uploads\4951636c-153b-4420-82cd-9f32f0d93701.jpg" />
     <Content Include="Content\Uploads\4d11615c-542f-431e-91a5-fb0eaa4a758f.jpg" />
+    <Content Include="Content\Uploads\5323fad8-101c-4871-89b0-30adcd5024fc.jpg" />
+    <Content Include="Content\Uploads\54727434-1227-4427-8b8f-62c9e967e224.jpg" />
+    <Content Include="Content\Uploads\54f07a6c-020c-40da-9e91-cdb6d6d06bcb.jpg" />
+    <Content Include="Content\Uploads\76826b4b-9693-48bc-84c7-161a75036b21.jpg" />
     <Content Include="Content\Uploads\7c28cd95-c77c-4f5c-a2f2-6f6191d0d06b.jpg" />
+    <Content Include="Content\Uploads\895b3133-5502-4c72-85aa-5d4c1381eb0d.jpg" />
+    <Content Include="Content\Uploads\8e3ca604-ab3b-44a5-a284-cdccfe7484a4.jpg" />
     <Content Include="Content\Uploads\932007ce-7421-4583-9fd0-c85c55c1dfb7.bmp" />
     <Content Include="Content\Uploads\932007ce-7421-4583-9fd0-c85c55c1dfb7.jpg" />
     <Content Include="Content\Uploads\932007ce-7421-4583-9fd0-c85c55c1dfb7.png" />
+    <Content Include="Content\Uploads\c15d6893-a5dd-4cdf-abca-a8207c99825f.jpg" />
+    <Content Include="Content\Uploads\c49adf23-008e-477d-bedc-d8b8712b55b8.jpg" />
+    <Content Include="Content\Uploads\f1fdf001-cbe1-41e3-9897-46e8410bb16c.jpg" />
+    <Content Include="Content\Uploads\fe5570b1-5dfd-4172-a1b1-85572cf192a2.jpg" />
     <Content Include="Content\ZeroClip.swf" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\ZeroClipboard.js" />
+    <Content Include="Views\ErrorPages\Oops.cshtml" />
     <EntityDeploy Include="Models\db.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>db.Designer.cs</LastGenOutput>
@@ -275,8 +294,7 @@
       <DependentUpon>db.edmx</DependentUpon>
       <LastGenOutput>db.cs</LastGenOutput>
     </Content>
-    <Content Include="Scripts\ZeroClipboard.js" />
-    <Content Include="Views\ErrorPages\Oops.cshtml" />
+    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\MEG.pubxml" />
     <Content Include="robots.txt" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
@@ -327,6 +345,7 @@
     <Content Include="Views\Home\ReservationDetails.cshtml" />
     <Content Include="Views\Home\MailingList.cshtml" />
     <Content Include="Views\Email\Index.cshtml" />
+    <Content Include="Views\Home\ConfirmationEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

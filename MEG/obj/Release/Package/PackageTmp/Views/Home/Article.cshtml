@@ -762,7 +762,7 @@ else
         <input type="text" id="title-type" title="Event type" value="@Model.TitleType" @if (!User.Identity.IsAuthenticated) { @Html.Raw("readonly=\"readonly\"")    } } />
       
         @{//ONLY NEED TO SHOW THIS STUFF IF IT's AN UP AND COMING ARTICLE.. OTHERWISE WE NEED TO SHOW THE REPORT
-            if (Model.EventDate.GetValueOrDefault().AddDays(7) > DateTime.UtcNow) { 
+            if (Model.EventDate==null||Model.EventDate.GetValueOrDefault().AddDays(7) > DateTime.UtcNow) { 
         
         
           <div id="seats">

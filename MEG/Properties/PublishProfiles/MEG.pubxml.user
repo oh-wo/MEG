@@ -422,7 +422,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/23/2013 18:09:16</publishTime>
     </File>
     <File Include="Views/Home/Article.cshtml">
-      <publishTime>07/23/2014 00:03:53</publishTime>
+      <publishTime>07/23/2014 10:10:59</publishTime>
     </File>
     <File Include="Views/Home/ConfirmationEmail.cshtml">
       <publishTime>07/05/2014 12:55:26</publishTime>
@@ -446,7 +446,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/18/2013 22:28:11</publishTime>
     </File>
     <File Include="Views/Home/Reservations.cshtml">
-      <publishTime>07/22/2014 20:59:12</publishTime>
+      <publishTime>08/07/2014 16:31:43</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>09/22/2013 17:35:03</publishTime>

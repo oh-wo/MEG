@@ -60,9 +60,9 @@
     @{
     foreach (Event e in Model.OrderByDescending(m=>m.Created))
     {
-        @{int SeatsRemaining = (e.TotalSeats.GetValueOrDefault() - e.SeatsTaken.GetValueOrDefault());
+        int SeatsRemaining = (e.TotalSeats.GetValueOrDefault() - e.SeatsTaken.GetValueOrDefault());
           SeatsRemaining = SeatsRemaining > 0 ? SeatsRemaining : 0;
-          }
+          
         <div class="meg-event">
             <div style="font-weight: bold; font-size: 25px; margin-top:20px;"> @e.Title</div>
             <div>
